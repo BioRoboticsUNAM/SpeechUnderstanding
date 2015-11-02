@@ -15,7 +15,9 @@ namespace SpeechUnderstanding
 			Console.WriteLine("Speech Understanding Functionality Benchmark"); 
 			Console.WriteLine("RoCKIn 2015, Lisbon");
 			Console.WriteLine();
-			
+
+			new CFRInterpreter().Interpret("Bring me the chips");
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FrmGUI());

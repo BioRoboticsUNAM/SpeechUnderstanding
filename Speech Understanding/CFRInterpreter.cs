@@ -2,36 +2,72 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using IronPython;
+using IronPython.Hosting;
+using Microsoft.Scripting;
+using Microsoft.Scripting.Hosting;
 
 namespace SpeechUnderstanding
 {
 	public class CFRInterpreter
 	{
+		private readonly ScriptEngine engine;
+		private readonly ScriptScope scope;
+		private readonly Func<string, string> interpreterFunction;
+
 		/// <summary>
 		/// Gets or sets the path tho the py interpreter file 
 		/// </summary>
 		public static string InterpreterScript { get; set; }
 		/// <summary>
-		/// Gets or sets the Python path
+		/// Gets or sets the name of the interpreter function in the interpreter script file
 		/// </summary>
-		public static string PytonPath{ get; set; }
+		public static string InterpreterFunction { get; set; }
+		/// <summary>
+		/// Gets or sets the Python library path
+		/// </summary>
+		public static string LibPath { get; set; }
 
 		static CFRInterpreter()
 		{
-			PytonPath = @"C:\Python\2.7\python.exe";
+			// LibPath = @"C:\Program Files (x86)\IronPython 2.7\Lib";
+			LibPath = @"C:\Python\2.7\Lib";
+			// InterpreterScript = @"Z:\Robocup Apps\interprete_lenguaje_egsr_tmr_2015\egprs_interpreter.py";
+			// InterpreterFunction = "interpret_command";
 			InterpreterScript = @"interpreter\egprs_interpreter.py";
+			InterpreterFunction = "interpret_command";
 		}
 
 		public CFRInterpreter()
 		{
-			
+			engine = Python.CreateEngine();
+			SetupEnginePaths();
+			scope = engine.ExecuteFile(InterpreterScript);
+			interpreterFunction = scope.GetVariable<Func<string, string>>(InterpreterFunction);
+		}
+
+		private void SetupEnginePaths()
+		{
+			ICollection<string> paths = engine.GetSearchPaths();
+			FileInfo scriptFileInfo = new FileInfo(InterpreterScript);
+			paths.Add(scriptFileInfo.DirectoryName);
+			DirectoryInfo[] scriptPathSubDirs = scriptFileInfo.Directory.GetDirectories("*", SearchOption.AllDirectories);
+			foreach (DirectoryInfo subdir in scriptPathSubDirs)
+				paths.Add(subdir.FullName);
+
+			DirectoryInfo libPathInfo = new DirectoryInfo(LibPath);
+			paths.Add(libPathInfo.FullName);
+			DirectoryInfo[] libPathSubDirs = libPathInfo.GetDirectories("*", SearchOption.AllDirectories);
+			foreach (DirectoryInfo subdir in libPathSubDirs)
+				paths.Add(subdir.FullName);
+			engine.SetSearchPaths(paths);
 		}
 
 		public string Interpret(string transcript)
 		{
 			try
 			{
-				return String.Empty;
+				return interpreterFunction(transcript);
 			}
 			catch { return String.Empty; }
 		}
