@@ -20,12 +20,24 @@ namespace SpeechUnderstanding
 		}
 
 		private Phase1(string grammarFilePath)
-		{
-			// this.grammar = new Grammar(grammarFilePath);
-			this.grammar = new DictationGrammar();
+		{	LoadGrammar(grammarFilePath);	
 			this.engine = new SpeechRecognitionEngine();
 			this.engine.LoadGrammar(grammar);
 			this.interpreter = new CFRInterpreter();
+		}
+
+		protected void LoadGrammar(string grammarFilePath)
+		{
+			try
+			{
+				this.grammar = new Grammar(grammarFilePath);
+				
+			}
+			catch
+			{
+				Console.WriteLine("Error while loading grammar. DictationGrammar will be used");
+				this.grammar = new DictationGrammar();
+			}
 		}
 
 		public static void Run(string grammarFilePath, string ioPath)
