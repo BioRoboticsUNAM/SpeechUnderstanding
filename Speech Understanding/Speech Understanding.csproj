@@ -120,11 +120,21 @@
     <Content Include="Interpreter\main.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Interpreter\ontologies\activity_ontology.txt" />
-    <Content Include="Interpreter\ontologies\attribute_ontology.txt" />
-    <Content Include="Interpreter\ontologies\context_knowledge.txt" />
-    <Content Include="Interpreter\ontologies\language_knowledge.txt" />
-    <Content Include="Interpreter\ontologies\stuff_ontology.txt" />
+    <Content Include="Interpreter\ontologies\activity_ontology.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Interpreter\ontologies\attribute_ontology.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Interpreter\ontologies\context_knowledge.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Interpreter\ontologies\language_knowledge.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Interpreter\ontologies\stuff_ontology.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Interpreter\parsing.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
