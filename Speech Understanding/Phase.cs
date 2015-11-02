@@ -19,6 +19,8 @@ namespace SpeechUnderstanding
 			Phase1.pendingWavFiles = new Queue<string>();
 		}
 
+		private Phase1() : this(Path.Combine("Grammars", "grammar.xml")) { }
+
 		private Phase1(string grammarFilePath)
 		{	LoadGrammar(grammarFilePath);	
 			this.engine = new SpeechRecognitionEngine();
