@@ -16,6 +16,8 @@ namespace SpeechUnderstanding
 			Console.WriteLine("RoCKIn 2015, Lisbon");
 			Console.WriteLine();
 
+			new CFRInterpreter().Interpret("Hello");
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new FrmGUI());

@@ -1,10 +1,6 @@
 import time
 import egprs_interpreter
 
-def interpret(s):
-  return egprs_interpreter.interpret_command(nlStr)
-  
-
 def main():
   # print " test: ", egprs_interpreter.interpret_command("take the orange juice from the shelf and deliver it to carmen at the dining room")
   while True:

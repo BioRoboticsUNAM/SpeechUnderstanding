@@ -47,11 +47,7 @@ namespace SpeechUnderstanding
 		{
 			engine = Python.CreateEngine();
 			SetupEnginePaths();
-			
-			// ScriptSource source = engine.CreateScriptSourceFromFile(InterpreterScript);
-			// CompiledCode compiled = source.Compile();
-			// interpreterFunction = compiled.DefaultScope.GetVariable<Func<string, string>>(InterpreterFunction); 
-
+			// Works but sometims crashes. Maybe mutual exclusion issue.
 			scope = engine.ExecuteFile(InterpreterScript);
 			interpreterFunction = scope.GetVariable<Func<string, string>>(InterpreterFunction);
 		}
