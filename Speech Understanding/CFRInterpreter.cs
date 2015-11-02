@@ -16,7 +16,11 @@ namespace SpeechUnderstanding
 		private readonly Func<string, string> interpreterFunction;
 
 		/// <summary>
-		/// Gets or sets the path tho the py interpreter file 
+		/// Gets or sets the path of the interpreter directory
+		/// </summary>
+		public static string InterpreterPath { get; set; }
+		/// <summary>
+		/// Gets or sets the name of the py interpreter file 
 		/// </summary>
 		public static string InterpreterScript { get; set; }
 		/// <summary>
@@ -34,7 +38,8 @@ namespace SpeechUnderstanding
 			LibPath = @"C:\Python\2.7\Lib";
 			// InterpreterScript = @"Z:\Robocup Apps\interprete_lenguaje_egsr_tmr_2015\egprs_interpreter.py";
 			// InterpreterFunction = "interpret_command";
-			InterpreterScript = @"interpreter\egprs_interpreter.py";
+			InterpreterPath = @"interpreter";
+			InterpreterScript = @"egprs_interpreter.py";
 			InterpreterFunction = "interpret_command";
 		}
 
@@ -42,18 +47,26 @@ namespace SpeechUnderstanding
 		{
 			engine = Python.CreateEngine();
 			SetupEnginePaths();
+			
+			// ScriptSource source = engine.CreateScriptSourceFromFile(InterpreterScript);
+			// CompiledCode compiled = source.Compile();
+			// interpreterFunction = compiled.DefaultScope.GetVariable<Func<string, string>>(InterpreterFunction); 
+
 			scope = engine.ExecuteFile(InterpreterScript);
 			interpreterFunction = scope.GetVariable<Func<string, string>>(InterpreterFunction);
 		}
 
 		private void SetupEnginePaths()
 		{
+			FileInfo scriptFileInfo = new FileInfo(Path.Combine(InterpreterPath, InterpreterScript));
+			InterpreterPath = scriptFileInfo.DirectoryName;
+			InterpreterScript = scriptFileInfo.Name;
+			engine.Runtime.Host.PlatformAdaptationLayer.CurrentDirectory = InterpreterPath;
 			ICollection<string> paths = engine.GetSearchPaths();
-			FileInfo scriptFileInfo = new FileInfo(InterpreterScript);
-			paths.Add(scriptFileInfo.DirectoryName);
-			DirectoryInfo[] scriptPathSubDirs = scriptFileInfo.Directory.GetDirectories("*", SearchOption.AllDirectories);
-			foreach (DirectoryInfo subdir in scriptPathSubDirs)
-				paths.Add(subdir.FullName);
+			// paths.Add(scriptFileInfo.DirectoryName);
+			// DirectoryInfo[] scriptPathSubDirs = scriptFileInfo.Directory.GetDirectories("*", SearchOption.AllDirectories);
+			// foreach (DirectoryInfo subdir in scriptPathSubDirs)
+			//	paths.Add(subdir.FullName);
 
 			DirectoryInfo libPathInfo = new DirectoryInfo(LibPath);
 			paths.Add(libPathInfo.FullName);
