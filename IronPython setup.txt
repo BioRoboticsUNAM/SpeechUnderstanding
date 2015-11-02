@@ -1,0 +1,5 @@
+Run as Admin:
+
+
+ipy -X:Frames -m ensurepip
+ipy -X:Frames -m pip install networkx html5lib
