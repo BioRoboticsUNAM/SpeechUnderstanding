@@ -10,6 +10,7 @@ namespace SpeechUnderstanding
 {
 	public partial class FrmGUI : Form
 	{
+		private Phase2 phase2;
 		private string grammarFile;
 
 		public FrmGUI()
@@ -41,7 +42,26 @@ namespace SpeechUnderstanding
 
 		private void btnPhase1_Click(object sender, EventArgs e)
 		{
-			 Phase1.Run(grammarFile, (string)cmbIODrive.SelectedItem);
+			btnPhase2.Enabled = false;
+			Phase1.Run(grammarFile, (string)cmbIODrive.SelectedItem);
+			btnPhase2.Enabled = true;
+		}
+
+		private void btnPhase2_Click(object sender, EventArgs e)
+		{
+			if (phase2 == null)
+			{
+				btnPhase1.Enabled = false;
+				phase2 = Phase2.Run(grammarFile, (string)cmbIODrive.SelectedItem);
+				btnPhase2.Text = "Stop Pase 2";
+			}
+			else
+			{
+				phase2.Stop();
+				phase2 = null;
+				btnPhase1.Enabled = true;
+				btnPhase2.Text = "Pase 2: Mic input";
+			}
 		}
 	}
 }

@@ -79,6 +79,7 @@
 			this.btnPhase2.TabIndex = 3;
 			this.btnPhase2.Text = "Pase 2: Mic input";
 			this.btnPhase2.UseVisualStyleBackColor = true;
+			this.btnPhase2.Click += new System.EventHandler(this.btnPhase2_Click);
 			// 
 			// FrmGUI
 			// 
