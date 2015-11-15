@@ -58,7 +58,7 @@ namespace SpeechUnderstanding
 			lock (resultsFileLock)
 			{
 				resultsFile = new StreamWriter(Path.Combine(path, "results.txt"), true);
-				resultsFile.WriteLine("Team: Pumas | Phase {0} | {1}", phase, DateTime.Now.ToString("U"));
+				resultsFile.WriteLine("Team: Pumas :: Phase {0} :: {1}", phase, DateTime.Now.ToString("U"));
 			}
 		}
 
@@ -66,7 +66,7 @@ namespace SpeechUnderstanding
 		{
 			lock (resultsFileLock)
 			{
-				resultsFile.WriteLine("{0} {1} {2}", waveFile, transcript, cfr);
+				resultsFile.WriteLine("{0}|{1}|{2}", waveFile, transcript, cfr);
 			}
 		}
 	}

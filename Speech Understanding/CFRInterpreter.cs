@@ -110,8 +110,9 @@ namespace SpeechUnderstanding
 		{
 			try
 			{
+				pythonOutputWaitHandle.Reset();
 				python.StandardInput.WriteLine(transcript);
-				if(!pythonOutputWaitHandle.WaitOne(1000))
+				if(!pythonOutputWaitHandle.WaitOne(5000))
 					return NO_INTERPRETATION;
 				lock (outputLock)
 				{
