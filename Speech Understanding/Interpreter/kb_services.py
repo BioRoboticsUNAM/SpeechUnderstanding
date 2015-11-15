@@ -278,8 +278,8 @@ def language_info():
 def is_type(G, semantic_type, objclss):
 	sub_types = all_subclasses(G, semantic_type) + all_objects(G, semantic_type)
 	akas = all_aka(G, objclss) + [objclss]
-	print 'sub_types: ', sub_types
-	print 'akas', akas
+	# print 'sub_types: ', sub_types
+	# print 'akas', akas
 	return not len(list_diff(akas, sub_types)) == len(akas) 
 
 def compound_words(G):

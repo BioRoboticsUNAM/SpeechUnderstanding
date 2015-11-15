@@ -238,7 +238,7 @@ def pos_tagger(G, sentence):
 		tags.append(look_tags(language_info, w))
 	
 	ranked_disambiguated_tags = disambiguate_pos(G, words, tags)
-	print "pos tags: ", ranked_disambiguated_tags
+	# print "pos tags: ", ranked_disambiguated_tags
 	return words, ranked_disambiguated_tags
 	
 def look_tags(voc, word):
@@ -462,29 +462,29 @@ def pp_chunker(grammar, list_words, pos_tags, np_list):
 # testing individual features
 def test_ontology_word_mapping():
 	sentence = 'where are all chairs functional status good'
-	print ontology_words_mapping(sentence)
+	# print ontology_words_mapping(sentence)
 
 def test_pos():
 	# graph of the knowledge base 
 	G = kb_services.load_semantic_network()
 	#print G.nodes()
 	words, ranked_tags = pos_tagger(G, "something to eat")
-	print  "words: ", words, "  tags: ", ranked_tags
+	# print  "words: ", words, "  tags: ", ranked_tags
 
 def test_disambiguity():
 	# graph of the knowledge base
 	G = kb.load_semantic_network() 
 	all_c = disambiguate_pos(G, [],[['uno'], ['a','b'], ['dos'], ['c', 'd'], ['tres']])
-	print  "all combinations: ", all_c
+	# print  "all combinations: ", all_c
 
 
 def test_cyk():
 	G = kb_services.load_semantic_network()
 	#print G.nodes()
 	words, ranked_tags = pos_tagger(G, "the kitchen")
-	print  "words: ", words, "  tags: ", ranked_tags
+	# print  "words: ", words, "  tags: ", ranked_tags
 
-	print "NP? ", parser_cyk(grammar_np_simple, ranked_tags[0])
+	# print "NP? ", parser_cyk(grammar_np_simple, ranked_tags[0])
 
 def test_chunker():
 	G = kb_services.load_semantic_network()
@@ -499,14 +499,14 @@ def test_chunker():
 	words, ranked_tags = pos_tagger(G, sentence)	
 
 
-	print words
-	print ranked_tags[0]
+	# print words
+	# print ranked_tags[0]
 
 	pp_interpretation = constituent_chunker(grammar_np_simple, words, ranked_tags[0])
 
-	print "chunked words: ", pp_interpretation[1]
+	# print "chunked words: ", pp_interpretation[1]
 
-	print "noun phrases: ", pp_interpretation[2]
+	# print "noun phrases: ", pp_interpretation[2]
 
 #test_ontology_word_mapping()
 #test_pos()

@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Threading;
 
 namespace SpeechUnderstanding
 {
 	public class CFRInterpreter
 	{
+		/// <summary>
+		/// The "NO_INTERPRETATION" string
+		/// </summary>
+		public const string NO_INTERPRETATION = "NO_INTERPRETATION";
+		
 		/// <summary>
 		/// Gets or sets the path tho the py interpreter file 
 		/// </summary>
@@ -21,6 +28,21 @@ namespace SpeechUnderstanding
 		/// </summary>
 		private Process python;
 
+		/// <summary>
+		/// Event for waiting python output to be ready
+		/// </summary>
+		private AutoResetEvent pythonOutputWaitHandle;
+
+		/// <summary>
+		/// Stores the python output
+		/// </summary>
+		private string output;
+
+		/// <summary>
+		/// Object to lock the access to the output string
+		/// </summary>
+		private readonly object outputLock;
+
 		static CFRInterpreter()
 		{
 			PytonPath = @"C:\Python\2.7\python.exe";
@@ -29,41 +51,74 @@ namespace SpeechUnderstanding
 
 		public CFRInterpreter()
 		{
+			outputLock = new Object();
+			pythonOutputWaitHandle = new AutoResetEvent(false);
+			SetupProcess();
+		}
+
+		~CFRInterpreter()
+		{
+			if ((python != null) && !python.HasExited)
+			{
+				python.CancelOutputRead();
+				python.CancelErrorRead();
+				python.Kill();
+				python.WaitForExit();
+				python.Close();
+			}
+		}
+
+		private void SetupProcess()
+		{
 			FileInfo scriptFileInfo = new FileInfo(InterpreterScript);
 			python = new Process();
-			ProcessStartInfo psi = new ProcessStartInfo(PytonPath, scriptFileInfo.Name);
+			ProcessStartInfo psi = new ProcessStartInfo(PytonPath, String.Format("-i {0}", scriptFileInfo.Name));
 			psi.RedirectStandardError = true;
 			psi.RedirectStandardInput = true;
 			psi.RedirectStandardOutput = true;
 			psi.UseShellExecute = false;
 			psi.WorkingDirectory = scriptFileInfo.DirectoryName;
 			python.StartInfo = psi;
+			python.OutputDataReceived += new DataReceivedEventHandler(DataReceivedFromPythonOutput);
+			python.ErrorDataReceived += new DataReceivedEventHandler(DataReceivedFromPythonError);
+			python.EnableRaisingEvents = true;				
+
 			python.Start();
-			python.StandardInput.WriteLine();
-			python.StandardInput.WriteLine();
+			python.BeginErrorReadLine();
+			python.BeginOutputReadLine();
+		}
+
+		private void DataReceivedFromPythonOutput(object sender, DataReceivedEventArgs e)
+		{
+			lock (outputLock)
+			{
+				output = e.Data;
+				pythonOutputWaitHandle.Set();
+			}
+		}
+
+		private void DataReceivedFromPythonError(object sender, DataReceivedEventArgs e)
+		{
+			lock (outputLock)
+			{
+				output = NO_INTERPRETATION;
+				pythonOutputWaitHandle.Set();
+			}
 		}
 
 		public string Interpret(string transcript)
 		{
 			try
 			{
-				// return String.Empty;
-				// Console.WriteLine(python.StandardOutput.ReadToEnd());
-				Discard(); Discard(); Discard();
 				python.StandardInput.WriteLine(transcript);
-				string result = python.StandardOutput.ReadLine();
-				return result;
+				if(!pythonOutputWaitHandle.WaitOne(1000))
+					return NO_INTERPRETATION;
+				lock (outputLock)
+				{
+					return output;
+				}
 			}
-			catch { return String.Empty; }
-		}
-
-		private void Discard()
-		{
-
-			while (python.StandardOutput.Peek() > -1)
-			{
-				Console.Write((char)python.StandardOutput.Read());
-			}
+			catch { return NO_INTERPRETATION; }
 		}
 	}
 }
