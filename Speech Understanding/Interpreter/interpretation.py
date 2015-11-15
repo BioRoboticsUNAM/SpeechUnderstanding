@@ -140,9 +140,9 @@ verbose = True
 def generate_dependency(G, sentence_dict):
 	# recibe un diccionario con campos "constituents", "objects", "types", "words", 
 	#la primeras dos son listas de strings y las otras son lista de listas
-	print "diccionario recibido: ", sentence_dict
+	# print "diccionario recibido: ", sentence_dict
 
-	print "palabras:: ", sentence_dict["words"]
+	# print "palabras:: ", sentence_dict["words"]
 	#print "Entrando a generate_dependency:.... ", sentence_dict
 	used_objects = []
 	solved_dependency = ''
@@ -150,7 +150,7 @@ def generate_dependency(G, sentence_dict):
 	
 
 	#print "7::       ------------------------------------" if verbose else "",
-	print "matching an interpretation" 
+	# print "matching an interpretation" 
 
 	# list of interpretations of each meaning pattern
 	# 
@@ -210,12 +210,12 @@ def generate_dependency(G, sentence_dict):
 
 	ranked_interpretations = sorted(interpretations_list, key=lambda k: k["rank"], reverse=True)
 
-	for each_inter in ranked_interpretations:
-		print "matched: " if verbose else "",
-		print each_inter["matched_elements"] if verbose else "",
-		print "rank: " if verbose else "",
-		print each_inter["rank"] if verbose else "",
-		print "____" if verbose else ""
+	# for each_inter in ranked_interpretations:
+		# print "matched: " if verbose else "",
+		# print each_inter["matched_elements"] if verbose else "",
+		# print "rank: " if verbose else "",
+		# print each_inter["rank"] if verbose else "",
+		# print "____" if verbose else ""
 
 	# hasta aqui se tienen las interpretaciones de todos los patrones ordenados por
 	# porcentaje de roles tematicos aterrizados
@@ -249,7 +249,7 @@ def generate_dependency(G, sentence_dict):
 
 
 		#print ""
-		print "Generated expresion: " + output_expression
+		# print "Generated expresion: " + output_expression
 		return output_expression
 
 		#print "mensaje de confirmacion: ", verbal_confirmation
@@ -259,7 +259,7 @@ def generate_dependency(G, sentence_dict):
 		#print "accion al planeador de no ser confirmado: ", planner_not_confirmed
 
 	else:
-		print "The sentence was not fully interpreted"
+		# print "The sentence was not fully interpreted"
 		return False
 
 
@@ -294,7 +294,7 @@ def break_sentence(sentence_string):
 # 3) solve syntactical well formed noun phrases
 def sentence_grounder(G, sentence):
 	sentence = parsing.ontology_words_mapping(sentence)
-	print "keywords substitution: " + sentence 
+	# print "keywords substitution: " + sentence 
 	
 	words, ranked_tags = parsing.pos_tagger(G, sentence)	
 	#print "2::       ------------------------------------" if verbose else ""
@@ -314,16 +314,16 @@ def sentence_grounder(G, sentence):
 	solved_nps = []
 	solved_nps_types = []
 	solved = True
-	print "np_interpretation: ", np_interpretation[2]
+	# print "np_interpretation: ", np_interpretation[2]
 	for each in np_interpretation[2]:
 		ontology_type, names = noun_phrase_grounder(G, each[0], each[1]) 
 		if names == []:
 			solved = False
-			print "noun phrase can not be grounded"
+			# print "noun phrase can not be grounded"
 		solved_nps.append(names)
 		solved_nps_types.append(ontology_type)
-		print "ontology_type: ", ontology_type
-		print "solved_nps_types: ", solved_nps_types
+		# print "ontology_type: ", ontology_type
+		# print "solved_nps_types: ", solved_nps_types
 	
 	#print "4::       ------------------------------------" if verbose else ""
 	#print "grounded noun phrases: " if verbose else "",
@@ -355,8 +355,8 @@ def sentence_grounder(G, sentence):
 		all_words = parsing.all_combinations(packed_words)
 
 		#print "5::       ------------------------------------" if verbose else ""
-		print "All sentences: " if verbose else "",
-		print  all_words if verbose else ""
+		# print "All sentences: " if verbose else "",
+		# print  all_words if verbose else ""
 		#print "-----> all combinations POS: ", np_interpretation[0]
 		
 		# up to here all direct grounded commands are contructed therefore
@@ -380,7 +380,7 @@ def sentence_grounder(G, sentence):
 				pp_names.append(prepositional_phrase_grounder(G, each_pp[0], each_pp[1])[0]) 
 				if pp_names == []:
 					solved = False
-					print "prepositional phrase: " + each + " can not be grounded"
+					# print "prepositional phrase: " + each + " can not be grounded"
 				#solved_nps.append(names)
 			#print "-----------PPPPPP", pp_names
 			if solved: 
@@ -399,8 +399,8 @@ def sentence_grounder(G, sentence):
 			pos_tags_pp = pp_interpretation[0]
 			words_pp = pp_interpretation[1]
 
-			print "-------- pos_tags_pp:, ", pos_tags_pp
-			print "solved_nps_types: ", solved_nps_types
+			# print "-------- pos_tags_pp:, ", pos_tags_pp
+			# print "solved_nps_types: ", solved_nps_types
 
 			k=0
 			#print "generando lista de tipos:"
@@ -411,8 +411,8 @@ def sentence_grounder(G, sentence):
 					#print "padre en la ontologia"
 					semantic_types.append(kb_services.all_superclasses(G, object_level[iterator]))
 				elif pp_interpretation[0][iterator] == 'noun' or pp_interpretation[0][iterator] == 'prep_phrase':
-					print "buscando tipos de: ", solved_nps_types[k]
-					print "super clases are: ", kb_services.all_superclasses(G,solved_nps_types[k])
+					# print "buscando tipos de: ", solved_nps_types[k]
+					# print "super clases are: ", kb_services.all_superclasses(G,solved_nps_types[k])
 					semantic_types.append(kb_services.all_superclasses(G,solved_nps_types[k]))
 					k = k + 1
 				else:
@@ -454,11 +454,11 @@ def sentence_grounder(G, sentence):
 
 			## cut
 
-			print "Resumen::       ------------------------------------" if verbose else ""
-			print "Words: ", chunked_final_words 
-			print "Sintax: ", constituent_level 
-			print "Objects:", object_level 
-			print "Object type", semantic_types
+			# print "Resumen::       ------------------------------------" if verbose else ""
+			# print "Words: ", chunked_final_words 
+			# print "Sintax: ", constituent_level 
+			# print "Objects:", object_level 
+			# print "Object type", semantic_types
 
 
 			analized_sentences.append({"words":chunked_final_words, "constituents": constituent_level, "objects": object_level, "types":semantic_types})
@@ -467,7 +467,7 @@ def sentence_grounder(G, sentence):
 		# return a list of dicionaries that
 		return analized_sentences
 	else:
-		print "SOMETHING WRONG! no object matched with the noun phrase"
+		# print "SOMETHING WRONG! no object matched with the noun phrase"
 		sem_types = []
 		return []
 
@@ -492,7 +492,7 @@ def noun_phrase_grounder(G, words, pos):
 		else:
 			return ontology_type, grounded_objs
 	else:
-		print 'Las palabras subespecificadas se resuelven a nivel del planeador'
+		# print 'Las palabras subespecificadas se resuelven a nivel del planeador'
 
 		return ontology_type, [ontology_type]
 
@@ -529,11 +529,11 @@ def solve_np(G, words, pos):
 			nums.append(words[i])
 		elif pos[i] == 'idf_pro':
 			nouns.append('stuff')
-	print 'nouns: ' , nouns , '   adjs: ' , adjs , '   vrbs: ' , vrbs , '   atts: ' , atts 
+	# print 'nouns: ' , nouns , '   adjs: ' , adjs , '   vrbs: ' , vrbs , '   atts: ' , atts 
 	# collect all objects of class
 	if len(nouns) > 0:
 		obj_candidates = kb_services.all_objects(G, nouns[0])
-		print 'candidate objects: ', obj_candidates
+		# print 'candidate objects: ', obj_candidates
 		# filter objects that has correct properties
 		if len(adjs) > 0:
 			for each_obj in obj_candidates:
@@ -572,7 +572,7 @@ def generate_nl_response_from_dict(dictio):
 		response = "not information about that, sorry"
 	else:
 		for each in dictio:
-			print "HEY " + each + "  " + dictio[each] if verbose else "",
+			# print "HEY " + each + "  " + dictio[each] if verbose else "",
 			response +=" is " + each + " " + " and ".join(dictio[each])
 	return response
 
@@ -593,10 +593,10 @@ def generate_nl_response_from_list(ls):
 def test_solver(sentence_string):
 	G = kb_services.load_semantic_network()
 	grounded_commands = sentence_grounder(G, sentence_string)
-	print "grounded command: ", grounded_commands
+	# print "grounded command: ", grounded_commands
 	for each_command in grounded_commands:
 		expression = generate_dependency(G, each_command)
-		print "generated expression to planner: ", expression
+		# print "generated expression to planner: ", expression
 
 
 

@@ -13,16 +13,16 @@ import re
 
 def interpret_command(sentence_string):
 
-	print "lol"
+	# print "lol"
 
 	G = kb_services.load_semantic_network()
 	grounded_commands = interpretation.sentence_grounder(G, sentence_string)
-	print "loll"
-	print "grounded command: ", grounded_commands
+	# print "loll"
+	# print "grounded command: ", grounded_commands
 	for each_command in grounded_commands:
 		expression = interpretation.generate_dependency(G, each_command)
-		print "generated expression to planner: ", expression
-	print "lolll"
+		# print "generated expression to planner: ", expression
+	# print "lolll"
 #	sentences  = interpretation.break_sentence(sentence_string)
 #	print "hi: ", sentences
 #	for command in sentences[0:1]:

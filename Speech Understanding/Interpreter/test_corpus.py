@@ -25,7 +25,7 @@ file_report = open('resultdos_rockin', 'w')
 lines = file.readlines()
 file.close()
 
-print "lines: ", lines
+# print "lines: ", lines
 
 #lines = ["Drop the jar", "Put the can on the counter", "Find the glass in the living room", "Search for the glass in the kitchen", "Go to the dining room", "Move along the wall", "Take the cereal box", "Grab the mayo on the table", "remove the sheets from the bed"]
 
@@ -33,11 +33,11 @@ inicio = 0
 fin = len(lines)
 
 for iterator in range(inicio,fin):
-	print "*********************************************"
+	# print "*********************************************"
 	command = lines[iterator]
 	command = re.sub('\n', '', command)
-	print ""
-	print "- OUT: ORIGINAL SENTENCE: ", command
+	# print ""
+	# print "- OUT: ORIGINAL SENTENCE: ", command
 	analized_sentences = interpretation.sentence_grounder(G, command)
 	commands = []
 	for each_caracterized_sentence in analized_sentences:
@@ -54,9 +54,9 @@ for iterator in range(inicio,fin):
 file_report.close()
 
 
-print "distribucion de interpretaciones: ", interpretation.used_patterns
+# print "distribucion de interpretaciones: ", interpretation.used_patterns
 
-print parsing.unknown_list
+# print parsing.unknown_list
 #	print "commands to planner..."	
 #	for each in commands:
 #		print "sent to planner: ", each
