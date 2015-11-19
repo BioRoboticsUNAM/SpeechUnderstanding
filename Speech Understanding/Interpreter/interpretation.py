@@ -20,17 +20,18 @@ def intersection(a,b):
 	a = set(a)
 	return [bb for bb in b if bb in a]
 #
+
 ###variables
-whActionGo = ["go", "move", "enter", "leave", "pass", "travel", "go_out", "walk", "walks", "navigate", "navigates", "reach", "get", "get_into", "enter", "come"]
+whActionGo = ["go", "move", "enter", "leave", "pass", "travel", "go_out", "walk", "walks", "navigate", "navigates", "reach", "get", "get_into", "enter", "come", "drive", "follow_me"]
 whGoalMotion = ["to", "over", "near", "into"]
-whActionFind = ["search_for", "find","look_for", "search","searches_for", "look_at", "seek", "pick_over", "point", "recognize", "examine", "finds", "watch"]
+whActionFind = ["search_for", "find","look_for", "search","searches_for", "look_at", "seek", "pick_over", "point", "recognize", "examine", "finds", "watch", "check", "see"]
 itemPlace = ["item", "place"]
 whGround = ["in", "near", "on", "into", "at"]
 whActionTake = ["take", "takes", "grasp", "grasps", "grab", "remove", "removes", "pick", "get", "pick_up", "lift"]
 whActionDrop = ["drop", "drops",  "place", "put", "release", "releases", "deliver", "let"]
 whSourceFrom = ["in", "from", "on", "in_from_ of", "right_of", "left_of", "into", "at", "upon", "above" ]
 whGoalPlacing = ["in", "to", "on", "at", "into", "for", "right_of", "left_of", "keep"]
-whActionBring = ["bring", "get", "fetch", "carry", "brings", "bring_up", "give"]
+whActionBring = ["bring", "get", "fetch", "carry", "brings", "bring_up", "give", "hanga", "pass"]
 
 meaning_mapping_patterns = [
 
@@ -76,6 +77,37 @@ meaning_mapping_patterns = [
 	"planner_confirmed": '',
 	"planner_not_confirmed": ''},
 
+	# MOVE on DIRECTION to 2*POS_RELATIVE_TO PLACE
+	{"params": ["what_action", "what_path", "what_relative_pos_one", "what_relative_pos_two", "what_goal"],
+	"what_action": [whActionGo, ["vrb"], [], []],
+	"what_path": [[], ["noun"], ["relpath"], []],
+	"what_relative_pos_one": [[], ["noun"], ["relpos"], []],
+	"what_relative_pos_two": [[], ["noun"], ["relpos"], []],
+	"what_goal": [[], ["noun"], ["place"], []],
+	"conceptual_dependency": "MOTION(goal:'-what_relative_pos_one- -what_relative_pos_two- -what_goal-', path:'-what_path-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
+	# MOVE to PERSON
+	{"params": ["what_action", "what_person_goal"],
+	"what_action": [whActionGo, ["vrb"], [], []],
+	"what_person_goal": [[], ["noun"], ["person"], []],
+	"conceptual_dependency": "MOTION(goal:'-what_person_goal-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
+	# MOVE to RELATIVE POS to a PERSON 
+	{"params": ["what_action", "what_path", "what_person_goal"],
+	"what_action": [whActionGo, ["vrb"], [], []],
+	"what_path": [[], ["noun"], ["relpath"], []],
+	"what_person_goal": [[], ["noun"], ["person"], []],
+	"conceptual_dependency": "MOTION(goal:'-what_person_goal-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
 	########################################################## SEARCHING
 	# search 1 argumento theme
 	{"params": ["what_action", "what_object"],
@@ -87,6 +119,36 @@ meaning_mapping_patterns = [
 	"planner_not_confirmed": ''},
 
 	# search 2 argumentos theme + ground
+	{"params": ["what_action", "what_object", "what_ground"],
+	"what_action": [whActionFind, ["vrb"], [], []],
+	"what_object": [[], ["noun"], ["item"], []],
+	"what_ground": [[], ["noun"], ['place'], []],
+	"conceptual_dependency": "SEARCHING(theme:'-what_object-', ground:'-what_ground-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
+	# search 2 argumentos grund + theme
+	{"params": ["what_action", "what_ground", "what_object"],
+	"what_action": [whActionFind, ["vrb"], [], []],
+	"what_object": [[], ["noun"], ["item"], []],
+	"what_ground": [[], ["noun"], ['place'], []],
+	"conceptual_dependency": "SEARCHING(theme:'-what_object-', ground:'-what_ground-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
+	# search 2 argumentos theme + ground (find object inside (or on) another object)
+	{"params": ["what_action", "what_object", "what_object_ground"],
+	"what_action": [whActionFind, ["vrb"], [], []],
+	"what_object": [[], ["noun"], ["item"], []],
+	"what_object_ground": [[], ["noun"], ['item'], []],
+	"conceptual_dependency": "SEARCHING(theme:'-what_object-', ground:'-what_object_ground-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
+	# search 2 argumentos ground + theme
 	{"params": ["what_action", "what_object", "what_ground"],
 	"what_action": [whActionFind, ["vrb"], [], []],
 	"what_object": [[], ["noun"], ["item"], []],
@@ -111,7 +173,7 @@ meaning_mapping_patterns = [
 	"what_action": [whActionTake, ["vrb"], [], []],
 	"what_object": [[], ["noun"], ["item"], []],
 	"what_source": [[], ["noun"], ['place'], []],
-	"conceptual_dependency": "SEARCHING(theme:'-what_object-', source:'-what_source-')",
+	"conceptual_dependency": "TAKING(theme:'-what_object-', source:'-what_source-')",
 	"verbal_confirmation": '',
 	"planner_confirmed": '',
 	"planner_not_confirmed": ''},
@@ -132,6 +194,17 @@ meaning_mapping_patterns = [
 	"what_object": [[], ["noun"], ["item"], []],
 	"what_goal": [[], ["noun"], ['place'], []],
 	"conceptual_dependency": "PLACING(theme:'-what_object-', goal:'-what_goal-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
+	# place 2 argumentos theme + relative position + goal
+	{"params": ["what_action", "what_object", "what_relative_pos", "what_goal"],
+	"what_action": [whActionDrop, ["vrb"], [], []],
+	"what_object": [[], ["noun"], ["item"], []],
+	"what_relative_pos": [[], ["noun"], ["relpos"], []],
+	"what_goal": [[], ["noun"], ['place'], []],
+	"conceptual_dependency": "PLACING(theme:'-what_object-', goal:'-what_relative_pos- -what_goal-')",
 	"verbal_confirmation": '',
 	"planner_confirmed": '',
 	"planner_not_confirmed": ''},
