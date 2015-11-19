@@ -166,6 +166,9 @@ def ontology_words_mapping(sentence):
 	sentence = re.sub('\?', ' ?', sentence)
 	sentence = re.sub('pick up ', 'take ', sentence)
 
+	sentence = re.sub('robot ', ' ', sentence)
+
+
 	sentence = re.sub('  ', ' ', sentence)
 	sentence = re.sub('\.', '', sentence)
 	sentence = re.sub(', ', ' ', sentence)
@@ -187,10 +190,33 @@ def ontology_words_mapping(sentence):
 
 	sentence = re.sub(' exactly down', ' down', sentence)
 
-	sentence = re.sub('search for ', 'search_for ', sentence)
+	sentence = re.sub('search for', 'search_for', sentence)
 
 	sentence = re.sub('look for', 'look_for', sentence)
 
+	sentence = re.sub('go out', 'go_out', sentence)
+
+	sentence = re.sub('get into', "get_into", sentence)
+
+	sentence = re.sub("searches for", "searches_for", sentence)
+	sentence = re.sub("pick up", "pick_up", sentence)
+	sentence = re.sub("right of", "right_of", sentence)
+	sentence = re.sub("left of", "left_of", sentence)
+	sentence = re.sub("bring up", "bring_up", sentence)
+
+	sentence = re.sub("right of", "right_of", sentence)
+	sentence = re.sub("near of", "near_of", sentence)
+	sentence = re.sub("left of", "left_of", sentence)
+	sentence = re.sub("in front of", "in_front_of", sentence)
+	sentence = re.sub("in front", "in_front", sentence)
+	sentence = re.sub("behind of", "behind_of", sentence)
+	sentence = re.sub("next to", "next_to", sentence)
+
+	sentence = re.sub("at corner", "at_corner", sentence)
+	sentence = re.sub("at corner of", "at_corner_of", sentence)
+	sentence = re.sub("at end", "at_end", sentence)
+	sentence = re.sub("at end of", "at_end_of", sentence)
+	
 	
 	sentence = re.sub('(could|can|would) you (please )?(robot )?', '', sentence)
 	sentence = re.sub('please (robot )?', '', sentence)

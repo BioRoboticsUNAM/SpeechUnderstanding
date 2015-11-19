@@ -19,19 +19,18 @@ def intersection(a,b):
 			a = [a]
 	a = set(a)
 	return [bb for bb in b if bb in a]
-# 
-
+#
 ###variables
-whActionGo = ["go", "move", "enter", "leave", "pass", "travel", "go_out", "walk", "walks", "navigate", "navigates", "reach", "get", "get_into"]
+whActionGo = ["go", "move", "enter", "leave", "pass", "travel", "go_out", "walk", "walks", "navigate", "navigates", "reach", "get", "get_into", "enter", "come"]
 whGoalMotion = ["to", "over", "near", "into"]
-whActionFind = ["search_for", "find","look_for", "search","searches_for", "look_at", "seek", "pick_over", "point", "recognize", "examine", "finds"]
+whActionFind = ["search_for", "find","look_for", "search","searches_for", "look_at", "seek", "pick_over", "point", "recognize", "examine", "finds", "watch"]
 itemPlace = ["item", "place"]
 whGround = ["in", "near", "on", "into", "at"]
 whActionTake = ["take", "takes", "grasp", "grasps", "grab", "remove", "removes", "pick", "get", "pick_up", "lift"]
 whActionDrop = ["drop", "drops",  "place", "put", "release", "releases", "deliver", "let"]
 whSourceFrom = ["in", "from", "on", "in_from_ of", "right_of", "left_of", "into", "at", "upon", "above" ]
-whGoalPlacing = ["in", "to", "on", "at", "into", "for", "right_of", "left_of"]
-whActionBring = ["bring", "get", "fetch", "carry", "brings", "bring_up"]
+whGoalPlacing = ["in", "to", "on", "at", "into", "for", "right_of", "left_of", "keep"]
+whActionBring = ["bring", "get", "fetch", "carry", "brings", "bring_up", "give"]
 
 meaning_mapping_patterns = [
 
@@ -192,8 +191,19 @@ meaning_mapping_patterns = [
 	{"params": ["what_action", "what_object", "what_source", "what_beneficiary"],
 	"what_action": [whActionBring, ["vrb"], [], []],
 	"what_object": [[], ["noun"], ["item"], []],
-    "what_source": [[], ["noun"], ['place'], []],
+    	"what_source": [[], ["noun"], ['place'], []],
 	"what_beneficiary": [[], ["noun"], ["person"], []],
+	"conceptual_dependency": "BRINGING(theme:'-what_object-', source:'-what_source-', beneficiary:'-what_beneficiary-')",
+	"verbal_confirmation": '',
+	"planner_confirmed": '',
+	"planner_not_confirmed": ''},
+
+	# place 2 argumentos theme + source + beneficiary
+	{"params": ["what_action", "what_beneficiary", "what_object", "what_source"],
+	"what_action": [whActionBring, ["vrb"], [], []],
+	"what_beneficiary": [[], ["noun"], ["person"], []],
+	"what_object": [[], ["noun"], ["item"], []],
+    	"what_source": [[], ["noun"], ['place'], []],
 	"conceptual_dependency": "BRINGING(theme:'-what_object-', source:'-what_source-', beneficiary:'-what_beneficiary-')",
 	"verbal_confirmation": '',
 	"planner_confirmed": '',
@@ -209,6 +219,17 @@ meaning_mapping_patterns = [
 	"verbal_confirmation": '',
 	"planner_confirmed": '',
 	"planner_not_confirmed": ''},
+
+	# bring me the object from source (goal person)
+	#{"params": ["what_action", "what_goal", "what_object", "what_source"],
+	#"what_action": [whActionBring, ["vrb"], [], []],
+	#"what_object": [[], ["noun"], ["item"], []],
+	#"what_source": [[], ["noun"], ['place'], []],
+	#"what_goal": [[], ["noun"], itemPlace, []],
+	#"conceptual_dependency": "BRINGING(theme:'-what_object-', goal:'-what_goal-', source:'-what_source-')",
+	#"verbal_confirmation": '',
+	#"planner_confirmed": '',
+	#"planner_not_confirmed": ''},
 
 	# bring 2 argumentos theme + source + goal + beneficiary
 	{"params": ["what_action","what_object", "what_source","what_beneficiary", "what_goal"],
@@ -352,7 +373,7 @@ def generate_dependency(G, sentence_dict):
 
 	else:
 		#print "The sentence was not fully interpreted"
-		return 'not_parsed'
+		return 'NO_INTERPRETATION'
 		#return False
 
 
