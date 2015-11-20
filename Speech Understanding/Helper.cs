@@ -18,5 +18,18 @@ namespace SpeechUnderstanding
 			}
 			return fullNames;
 		}
+
+		public static string GetTranscript(System.Speech.Recognition.RecognitionResult result)
+		{
+			string transcript = (result == null) ? String.Empty : result.Text;
+			CleanTranscript(ref transcript);
+			return transcript;
+		}
+
+		public static void CleanTranscript(ref string transcript)
+		{
+			transcript = transcript.Replace("...", String.Empty);
+			transcript = transcript.Replace("  ", " ");
+		}
 	}
 }

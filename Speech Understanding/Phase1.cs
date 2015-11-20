@@ -9,6 +9,7 @@ namespace SpeechUnderstanding
 	public class Phase1 : Phase
 	{
 		private static readonly Queue<string> pendingWavFiles;
+		private static int total;
 
 		static Phase1()
 		{
@@ -20,6 +21,24 @@ namespace SpeechUnderstanding
 		protected Phase1(string grammarFilePath)
 			: base(grammarFilePath)
 		{
+		}
+
+		protected override void LoadGrammarAlt(string grammarFilePath)
+		{
+			LoadGrammarAlt(this.engine, grammarFilePath);
+		}
+
+		public static event Action<int, int> Progress;
+
+		protected static void OnProgress(int pending)
+		{
+			if (Progress == null)
+				return;
+			try
+			{
+				Progress(total - pending, total);
+			}
+			catch { }
 		}
 
 		public static void Run(string grammarFilePath, string ioPath)
@@ -52,6 +71,7 @@ namespace SpeechUnderstanding
 			{
 				foreach (string waveFile in wavFiles)
 					pendingWavFiles.Enqueue(waveFile);
+				total = pendingWavFiles.Count;
 			}
 		}
 
@@ -63,6 +83,7 @@ namespace SpeechUnderstanding
 				string waveFile;
 				lock (pendingWavFiles)
 				{
+					OnProgress(pendingWavFiles.Count);
 					if (pendingWavFiles.Count < 1)
 						return;
 					waveFile = pendingWavFiles.Dequeue();
@@ -83,8 +104,7 @@ namespace SpeechUnderstanding
 				this.engine.SetInputToWaveFile(waveFile);
 				result = this.engine.Recognize();
 			}
-			string transcript = (result == null) ? String.Empty : result.Text;
-			transcript = transcript.Replace("... ", String.Empty);
+			string transcript = Helper.GetTranscript(result);
 			string cfr = interpreter.Interpret(transcript);
 			WriteResultsFile(waveFile, transcript, cfr);
 			

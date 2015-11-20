@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Drawing;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SpeechUnderstanding
@@ -17,6 +17,12 @@ namespace SpeechUnderstanding
 		{
 			InitializeComponent();
 			grammarFile = Path.Combine("Grammars", "grammar.xml");
+			Phase1.Progress+= (value, max) =>{
+				this.BeginInvoke(new Action(() => {
+					pbPhase1.Maximum = max;
+					pbPhase1.Value = value;
+				}));
+			};
 		}
 
 		private void PopulateRemovableDriveCombo()
@@ -28,6 +34,16 @@ namespace SpeechUnderstanding
 			btnPhase2.Enabled = cmbIODrive.Items.Count > 0;
 			cmbIODrive.SelectedIndex = cmbIODrive.Items.Count > 0 ? 0 : -1;
 			Console.WriteLine("Selected I/O Drive: {0}", cmbIODrive.SelectedItem ?? "none");
+		}
+
+		private void AsyncPhase1(object drive)
+		{
+			Phase1.Run(grammarFile, (string)drive);
+			this.Invoke( new Action( () => {
+				btnPhase1.Enabled = true;
+				btnPhase2.Enabled = true;
+				pbPhase1.Visible = false;
+			}));
 		}
 
 		private void cmbIODrive_Click(object sender, EventArgs e)
@@ -42,9 +58,13 @@ namespace SpeechUnderstanding
 
 		private void btnPhase1_Click(object sender, EventArgs e)
 		{
+			btnPhase1.Enabled = false;
 			btnPhase2.Enabled = false;
-			Phase1.Run(grammarFile, (string)cmbIODrive.SelectedItem);
-			btnPhase2.Enabled = true;
+			Thread worker = new Thread(new ParameterizedThreadStart(AsyncPhase1));
+			worker.IsBackground = true;
+			pbPhase1.Visible = true;
+			pbPhase1.Value = 0;
+			worker.Start(cmbIODrive.SelectedItem);
 		}
 
 		private void btnPhase2_Click(object sender, EventArgs e)

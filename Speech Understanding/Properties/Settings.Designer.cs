@@ -22,5 +22,23 @@ namespace SpeechUnderstanding.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Python\\2.7\\python.exe")]
+        public string PytonPath {
+            get {
+                return ((string)(this["PytonPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("interpreter\\main.py")]
+        public string InterpreterScript {
+            get {
+                return ((string)(this["InterpreterScript"]));
+            }
+        }
     }
 }

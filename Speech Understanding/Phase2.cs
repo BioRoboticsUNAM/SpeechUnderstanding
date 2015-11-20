@@ -10,6 +10,7 @@ namespace SpeechUnderstanding
 	{
 		private string ioPath;
 		private int audioFileIndex;
+		private SpeechRecognitionEngine auxEngine;
 
 		protected Phase2() { }
 
@@ -23,6 +24,14 @@ namespace SpeechUnderstanding
 			this.engine.SpeechRecognized+=new EventHandler<SpeechRecognizedEventArgs>(SpeechRecognized);
 			this.engine.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(SpeechRecognitionRejected);
 			this.audioFileIndex = 1;
+			
+		}
+
+		protected override void LoadGrammarAlt(string grammarFilePath)
+		{
+			this.auxEngine = new SpeechRecognitionEngine();
+			LoadGrammarAlt(this.auxEngine, grammarFilePath);
+			this.auxEngine.Grammars[0].Enabled = true;
 		}
 
 		public static Phase2 Run(string grammarFilePath, string ioPath)
@@ -52,7 +61,7 @@ namespace SpeechUnderstanding
 			try
 			{
 				string waveFile = SaveWaveFile(e.Result.Audio);
-				string transcript = e.Result.Text;
+				string transcript = Helper.GetTranscript(e.Result);
 				string cfr = interpreter.Interpret(transcript);
 				Console.WriteLine("\tPhase 2: {0}", transcript);
 				WriteResultsFile(waveFile, transcript, cfr);
@@ -65,8 +74,21 @@ namespace SpeechUnderstanding
 			try
 			{
 				string waveFile = SaveWaveFile(e.Result.Audio);
-				Console.WriteLine("\tPhase 2: BAD RECOGNITION");
-				WriteResultsFile(waveFile, "BAD_RECOGNITION", "NO_INTERPRETATION");
+				auxEngine.SetInputToWaveFile(waveFile);
+				RecognitionResult result = auxEngine.Recognize();
+				if ((result == null) || (result.Confidence < 0.6))
+				{
+					Console.WriteLine("\tPhase 2: BAD RECOGNITION");
+					WriteResultsFile(waveFile, "BAD_RECOGNITION", "NO_INTERPRETATION");
+				}
+				else
+				{
+					string transcript = Helper.GetTranscript(e.Result);
+					string cfr = interpreter.Interpret(transcript);
+					Console.WriteLine("\tPhase 2: {0}", transcript);
+					WriteResultsFile(waveFile, transcript, cfr);
+				}
+
 			}
 			catch { }
 		}

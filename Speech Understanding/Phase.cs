@@ -24,11 +24,9 @@ namespace SpeechUnderstanding
 
 		protected Phase(string grammarFilePath)
 		{
-			LoadGrammar(grammarFilePath);	
 			this.engine = new SpeechRecognitionEngine();
-			this.engine.LoadGrammar(grammar);
-			this.engine.LoadGrammar(grammarAlt);
-			grammarAlt.Enabled = false;
+			LoadGrammar(grammarFilePath);
+			LoadGrammarAlt(grammarFilePath);
 			this.interpreter = new CFRInterpreter();
 		}
 
@@ -45,17 +43,23 @@ namespace SpeechUnderstanding
 				this.grammar = new DictationGrammar();
 				ex.ToString();
 			}
-			LoadGrammarAlt(grammarFilePath);
+			this.engine.LoadGrammar(grammar);
 		}
 
-		protected void LoadGrammarAlt(string grammarFilePath)
+		protected abstract void LoadGrammarAlt(string grammarFilePath);
+
+		protected void LoadGrammarAlt(SpeechRecognitionEngine engine, string grammarFilePath)
 		{
 			try
 			{
 				grammarAlt = new Grammar(grammarFilePath, "sentenceAlt");
 			}
-			catch { grammarAlt = new DictationGrammar();
+			catch
+			{
+				grammarAlt = new DictationGrammar();
 			}
+			grammarAlt.Enabled = false;
+			engine.LoadGrammar(grammarAlt);
 		}
 
 		protected static void CloseResultsFile()
