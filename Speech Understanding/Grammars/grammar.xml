@@ -45,6 +45,8 @@
 			<item><ruleref uri="#commandBring" /></item>
 			<!-- PLACING //-->
 			<item><ruleref uri="#commandPlace" /></item>
+			<!-- DROPPING //-->
+			<item><ruleref uri="#commandDrop" /></item>
 			<!-- TAKING //-->
 			<item><ruleref uri="#commandTake" /></item>
 			
@@ -55,7 +57,8 @@
 			<item><ruleref uri="#commandNavigate" /></item>
 			<!-- OTHER //-->
 			<item><ruleref uri="#commandTurnOnOff" /></item>
-			<item><ruleref uri="#commandTurnOnOff" /></item>
+			<!-- Opening / Closing //-->
+			<item><ruleref uri="#commandOpenClose" /></item>
 		</one-of>
 	</rule>
 	
@@ -121,7 +124,7 @@
 	<!--
 	
 	Object placing
-		Place / give / take
+		Bring / carry / deliver / give / pass / place / put
 	
 	//-->
 	<rule id="commandPlace">
@@ -129,8 +132,10 @@
 		<one-of>
 			<!-- place [what] [where] //-->
 			<item><ruleref uri="#placeDirectObject" /><ruleref uri="#placeDestination" /></item>
-			<!-- give [what] [who] //-->
+			<!-- place [what] [who] //-->
 			<item><ruleref uri="#placeDirectObject" /><ruleref uri="#placeReceiver" /></item>
+			<!-- place [who] [what] //-->
+			<item><ruleref uri="#placeReceiver" /><ruleref uri="#placeDirectObject" /></item>
 		</one-of>
 	</rule>
 	
@@ -138,7 +143,7 @@
 		<ruleref uri="#prepositionPlace" />
 		<one-of>
 			<item><ruleref uri="#pronounPersonal2" /></item>
-			<item><ruleref uri="#nounPeople" /></item>
+			<item><ruleref uri="#people" /></item>
 		</one-of>
 	</rule>
 	
@@ -158,14 +163,39 @@
 		<item repeat="0-1"><ruleref uri="#adverb" /></item>
 		<one-of>
 			<item>bring</item>
-			<item>deliver</item>
 			<item>carry</item>
-			<item>hang out</item>
+			<item>deliver</item>
 			<item>give</item>
+			<item>pass</item>
 			<item>place</item>
 			<item>put</item>
+		</one-of>
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+	</rule>
+	
+	<!--
+	
+	Object dropping
+		Drop / hang out / put down / release
+	
+	//-->
+	<rule id="commandDrop">
+		<ruleref uri="#verbDrop" />
+			<!-- drop [what] //-->
+			<item><ruleref uri="#dropDirectObject" /></item>
+	</rule>
+	
+	<rule id="dropDirectObject">
+		<ruleref uri="#object" />
+		<item repeat="0-2">and <ruleref uri="#object" /></item>
+	</rule>
+	
+	<rule id="verbDrop">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>drop</item>
+			<item>hang out</item>
 			<item>put down</item>
-			<item>take</item>
 			<item>release</item>
 		</one-of>
 		<item repeat="0-1"><ruleref uri="#adverb" /></item>
@@ -205,9 +235,11 @@
 		<item repeat="0-1"><ruleref uri="#adverb" /></item>
 		<one-of>
 			<item>bring</item>
-			<item>take</item>
+			<item>fetch</item>
+			<item>grab</item>
 			<item>grasp</item>
 			<item>pick up</item>
+			<item>take</item>
 		</one-of>
 		<item repeat="0-1"><ruleref uri="#adverb" /></item>
 	</rule>
@@ -398,6 +430,32 @@
 	
 	<!--
 	
+	Object dropping
+		Drop / hang out / put down / release
+	
+	//-->
+	<rule id="commandOpenClose">
+		<ruleref uri="#verbOpenClose" />
+		<!-- open/close [what] //-->
+		<item><ruleref uri="#openCloseDirectObject" /></item>
+	</rule>
+	
+	<rule id="openCloseDirectObject">
+		<ruleref uri="#object" />
+		<item repeat="0-2">and <ruleref uri="#object" /></item>
+	</rule>
+	
+	<rule id="verbOpenClose">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>open</item>
+			<item>close</item>
+		</one-of>
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+	</rule>
+	
+	<!--
+	
 	Command extraction from parts
 	
 	//-->
@@ -411,6 +469,8 @@
 			<item><ruleref uri="#strippedPlace" /></item>
 			<item><ruleref uri="#strippedTake" /></item>
 			<item><ruleref uri="#strippedSearch" /></item>
+			<item><ruleref uri="#strippedDrop" /></item>
+			<item><ruleref uri="#strippedOpenClose" /></item>
 		</one-of>
 		<ruleref uri="#garbage" />
 	</rule>
@@ -451,6 +511,16 @@
 			<!-- place Put object //-->
 			<item><ruleref uri="#nounPlace" /><ruleref uri="#garbage" /><ruleref uri="#verbPlace" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /></item>
 		</one-of>
+	</rule>
+	
+	<rule id="strippedDrop">
+	<!-- Drop object //-->
+		<item><ruleref uri="#verbDrop" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /></item>
+	</rule>
+	
+	<rule id="strippedOpenClose">
+	<!-- Open/close object //-->
+		<item><ruleref uri="#verbOpenClose" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /></item>
 	</rule>
 	
 	<rule id="strippedTake">
@@ -866,6 +936,7 @@
 	
 	<rule id="nounObject">
 		<one-of>
+			<item><ruleref uri="#nounMachines" /></item>
 			<item>abat jour</item>
 			<item>apple</item>
 			<item>aspirin</item>

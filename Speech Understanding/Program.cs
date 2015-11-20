@@ -24,7 +24,7 @@ namespace SpeechUnderstanding
 			Console.WriteLine();
 
 			// new CFRInterpreter().Interpret("Bring me the milk");
-			GrammarTest();
+			// GrammarTest();
 			// OntologyTest();
 
 			Application.EnableVisualStyles();

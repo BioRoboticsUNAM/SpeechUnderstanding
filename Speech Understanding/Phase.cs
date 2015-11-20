@@ -83,6 +83,8 @@ namespace SpeechUnderstanding
 
 		protected static void WriteResultsFile(string waveFile, string transcript, string cfr)
 		{
+			if (String.IsNullOrEmpty(transcript) || (transcript.Trim().Length < 1))
+				transcript = "BAD_RECOGNITION";
 			lock (resultsFileLock)
 			{
 				resultsFile.WriteLine("{0}|{1}|{2}", waveFile, transcript, cfr);
