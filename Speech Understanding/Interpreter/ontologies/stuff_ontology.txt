@@ -2,6 +2,7 @@
 (stuff  		is_kind_of  	top)
 (aka 			is_kind_of 		attribute)
 
+
 #
 (person 		is_kind_of 		stuff)
 (item 			is_kind_of 		stuff)
