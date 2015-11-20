@@ -40,5 +40,14 @@ namespace SpeechUnderstanding.Properties {
                 return ((string)(this["InterpreterScript"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("English (United Kingdom)")]
+        public global::System.Globalization.CultureInfo Setting {
+            get {
+                return ((global::System.Globalization.CultureInfo)(this["Setting"]));
+            }
+        }
     }
 }

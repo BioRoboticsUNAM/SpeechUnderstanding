@@ -8,5 +8,8 @@
     <Setting Name="InterpreterScript" Type="System.String" Scope="Application">
       <Value Profile="(Default)">interpreter\main.py</Value>
     </Setting>
+    <Setting Name="Setting" Type="System.Globalization.CultureInfo" Scope="Application">
+      <Value Profile="(Default)">English (United Kingdom)</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -29,7 +29,7 @@ namespace SpeechUnderstanding
 
 		protected override void LoadGrammarAlt(string grammarFilePath)
 		{
-			this.auxEngine = new SpeechRecognitionEngine();
+			this.auxEngine = new SpeechRecognitionEngine(this.engine.RecognizerInfo.Culture);
 			LoadGrammarAlt(this.auxEngine, grammarFilePath);
 			this.auxEngine.Grammars[0].Enabled = true;
 		}

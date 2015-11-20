@@ -24,7 +24,7 @@ namespace SpeechUnderstanding
 
 		protected Phase(string grammarFilePath)
 		{
-			this.engine = new SpeechRecognitionEngine();
+			this.engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-GB"));
 			LoadGrammar(grammarFilePath);
 			LoadGrammarAlt(grammarFilePath);
 			this.interpreter = new CFRInterpreter();

@@ -81,8 +81,7 @@
 	
 	<rule id="bringReceiver">
 		<one-of>
-			<item>here</item>
-			<item>there</item>
+			<!-- <item><ruleref uri="#adverbPlace" /></item> //-->
 			<item><ruleref uri="#pronounPersonal2" /></item>
 			<item><ruleref uri="#nounPeople" /></item>
 		</one-of>
@@ -90,8 +89,7 @@
 	
 	<rule id="bringDestination">
 		<one-of>
-			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
-			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
+			<item><ruleref uri="#adverbPlace" /></item>
 			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
 		</one-of>
 	</rule>
@@ -146,8 +144,7 @@
 	
 	<rule id="placeDestination">
 		<one-of>
-			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
-			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
+			<item><ruleref uri="#adverbPlace" /></item>
 			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
 		</one-of>
 	</rule>
@@ -239,8 +236,7 @@
 	
 	<rule id="searchPlace">
 		<one-of>
-			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
-			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
+			<item><ruleref uri="#adverbPlace" /></item>
 			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
 		</one-of>
 	</rule>
@@ -287,7 +283,7 @@
 	
 	<rule id="followDestination">
 		<one-of>
-			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item><ruleref uri="#prepositionPlace" /></item>
 			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
 			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
 		</one-of>
@@ -303,6 +299,8 @@
 		<item repeat="0-1"><ruleref uri="#adverb" /></item>
 		<one-of>
 			<item>follow</item>
+			<item>come to</item>
+			<item>come with</item>
 		</one-of>
 	</rule>
 	
@@ -333,8 +331,7 @@
 	<rule id="navigatePlace">
 		<item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>
 		<one-of>
-			<item>here</item>
-			<item>there</item>
+			<item><ruleref uri="#adverbPlace" /></item>
 			<item><ruleref uri="#place" /></item>
 		</one-of>
 	</rule>
@@ -560,6 +557,7 @@
 	<rule id="place">
 		<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
 		<one-of>
+			<item><ruleref uri="#adverbPlace" /></item>
 			<item><ruleref uri="#nounPlace" /></item>
 			
 			<item>
@@ -615,14 +613,13 @@
 		<item repeat="0-1">
 			<one-of>
 				<item><ruleref uri="#determiner" /></item>
+				<!--
 				<item><ruleref uri="#determinerQuantifier" /><ruleref uri="#determinerNQ" /></item>
-				<item><ruleref uri="#determinerQuantifier" /> of <ruleref uri="#determinerNQ" /></item>
-				<item><ruleref uri="#determinerArticle" /><ruleref uri="#determinerQuantifier" /> of <ruleref uri="#determinerNQ" /></item>
-				<item><ruleref uri="#determinerDemonstrative" /><ruleref uri="#determinerQuantifier" /> of <ruleref uri="#determinerNQ" /></item>
-				<item><ruleref uri="#determinerNQ" /><ruleref uri="#determinerQuantifier" /></item>
+				<item><ruleref uri="#determinerDemonstrative" /><ruleref uri="#determinerQuantifier" /><ruleref uri="#determinerNQ" /></item>
+				//-->
 			</one-of>
 		</item>
-		<item repeat="0-5"><ruleref uri="#phraseAdjective" /></item>
+		<item repeat="0-1"><ruleref uri="#phraseAdjective" /></item>
 	</rule>
 	
 	<!--
@@ -632,23 +629,8 @@
 	
 	//-->
 	<rule id="phraseAdjective">
-		<one-of>
-			<item><ruleref uri="#phraseAdjectiveSimple" /></item>
-			<item><ruleref uri="#phraseAdjectiveSimple" /><ruleref uri="#and_or" /><ruleref uri="#phraseAdjectiveSimple" /></item>
-			<item><ruleref uri="#phraseAdjectiveList" /></item>
-		</one-of>
-	</rule>
-	
-	<rule id="phraseAdjectiveSimple">
-		<item repeat="0-"><ruleref uri="#adverbDegree" /></item>
+		<item repeat="0-1"><ruleref uri="#adverbDegree" /></item>
 		<item><ruleref uri="#adjective" /></item>
-	</rule>
-	
-	<rule id="phraseAdjectiveList">
-		<item><ruleref uri="#phraseAdjectiveSimple" />,</item>
-		<item repeat="0-"><ruleref uri="#phraseAdjectiveSimple" />,</item>
-		<item><ruleref uri="#and_or" /></item>
-		<item><ruleref uri="#phraseAdjectiveSimple" /></item>
 	</rule>
 	
 	<!--
@@ -659,22 +641,9 @@
 	//-->
 	<rule id="phraseAdverb">
 		<one-of>
-			<item><ruleref uri="#phraseAdverbSimple" /></item>
-			<item><ruleref uri="#phraseAdverbSimple" /><ruleref uri="#and_or" /><ruleref uri="#phraseAdverbSimple" /></item>
-			<item><ruleref uri="#phraseAdverbList" /></item>
+			<item><ruleref uri="#adverb" /></item>
+			<item><ruleref uri="#adverbDegree" /><ruleref uri="#adverbNoDegree" /></item>
 		</one-of>
-	</rule>
-	
-	<rule id="phraseAdverbSimple">
-		<item repeat="0-5"><ruleref uri="#adverbDegree" /></item>
-		<item><ruleref uri="#adverbNoDegree" /></item>
-	</rule>
-	
-	<rule id="phraseAdverbList">
-		<item><ruleref uri="#phraseAdverbSimple" />,</item>
-		<item repeat="0-5"><ruleref uri="#phraseAdverbSimple" />,</item>
-		<item><ruleref uri="#and_or" /></item>
-		<item><ruleref uri="#phraseAdverbSimple" /></item>
 	</rule>
 			
 	<!--
@@ -691,8 +660,10 @@
 	<rule id="pronounPersonal2">
 		<one-of>
 			<item>me</item>
+			<!--
 			<item>her</item>
-			<item>her</item>
+			<item>his</item>
+			//-->
 			<item>us</item>
 			<item>them</item>
 		</one-of>
@@ -702,15 +673,19 @@
 		<one-of>
 			<item>this</item>
 			<item>that</item>
+			<!--
 			<item>these</item>
 			<item>those</item>
+			//-->
 		</one-of>
 	</rule>
 	
 	<rule id="pronounRelative">
 		<one-of>
+			<!--
 			<item>who</item>
 			<item>whom</item>
+			//-->
 			<item>which</item>
 			<item>that</item>
 		</one-of>
@@ -726,43 +701,25 @@
 	//-->
 	<rule id="prepositionPlace">
 		<one-of>
-			<item>above</item>
-			<item>across</item>
-			<item>against</item>
 			<item>along</item>
-			<item>among</item>
 			<item>around</item>
 			<item>at</item>
 			<item>away from</item>
 			<item>behind</item>
-			<item>below</item>
-			<item>beside</item>
 			<item>between</item>
-			<item>beyond</item>
-			<item>by</item>
 			<item>close to</item>
 			<item>down</item>
 			<item>from</item>
 			<item>in</item>
-			<item>in front of</item>
 			<item>inside</item>
 			<item>into</item>
 			<item>near</item>
-			<item>next to</item>
 			<item>off</item>
 			<item>on</item>
-			<item>on top of</item>
 			<item>onto</item>
-			<item>opposite</item>
-			<item>out of</item>
-			<item>outside</item>
-			<item>past</item>
-			<item>round</item>
-			<item>through</item>
 			<item>to</item>
 			<item>towards</item>
 			<item>under</item>
-			<item>underneath</item>
 			<item>up</item>
 		</one-of>
 	</rule>
@@ -783,7 +740,6 @@
 			<item><ruleref uri="#adverbDegree" /></item>
 			<item><ruleref uri="#adverbFrequency" /></item>
 			<item><ruleref uri="#adverbManner" /></item>
-			<item><ruleref uri="#adverbPlace" /></item>
 			<item><ruleref uri="#adverbTruth" /></item>
 		</one-of>
 	</rule>
@@ -792,7 +748,6 @@
 		<one-of>
 			<item><ruleref uri="#adverbFrequency" /></item>
 			<item><ruleref uri="#adverbManner" /></item>
-			<item><ruleref uri="#adverbPlace" /></item>
 			<item><ruleref uri="#adverbTruth" /></item>
 		</one-of>
 	</rule>
@@ -817,28 +772,26 @@
 
 	<rule id="adverbPlace">
 		<one-of>
-			<item>above</item>
 			<item>away</item>
 			<item>behind</item>
-			<item>below</item>
 			<item>down</item>
-			<item>elsewhere</item>
 			<item>everywhere</item>
+			<item>here</item>
 			<item>here</item>
 			<item>inside</item>
 			<item>near</item>
-			<item>nearby</item>
-			<item>off</item>
-			<item>on</item>
 			<item>out</item>
-			<item>outside</item>
-			<item>over</item>
 			<item>there</item>
-			<item>there</item>
-			<item>towards</item>
-			<item>under</item>
 			<item>up</item>
-			<item>where</item>
+			
+			<item>down here</item>
+			<item>over here</item>
+			<item>to here</item>
+			<item>up to here</item>
+			<item>around here</item>
+			<item>over there</item>
+			<item>around there</item>
+			<item>up there</item>
 		</one-of>
 	</rule>
 	
@@ -850,34 +803,9 @@
 	
 	<rule id="adverbDegree">
 		<one-of>
-			<item>a bit</item>
-			<item>a little</item>
-			<item>absolutely</item>
 			<item>as</item>
-			<item>at all</item>
-			<item>awfully</item>
-			<item>completely</item>
-			<item>entirely</item>
-			<item>extremely</item>
-			<item>fairly</item>
 			<item>fully</item>
-			<item>half</item>
-			<item>hardly</item>
-			<item>least</item>
-			<item>less</item>
-			<item>more</item>
-			<item>most</item>
-			<item>pretty</item>
-			<item>quite</item>
-			<item>rather</item>
 			<item>really</item>
-			<item>scarcely</item>
-			<item>slightly</item>
-			<item>so</item>
-			<item>somewhat</item>
-			<item>terribly</item>
-			<item>too</item>
-			<item>totally</item>
 			<item>very</item>
 		</one-of>
 	</rule>
@@ -931,7 +859,7 @@
 			<item>father</item>
 			<item>mother</item>
 			<item>sister</item>
-			<item>brother</item>
+			<!-- <item>brother</item> //-->
 			<item>friend</item>
 		</one-of>
 	</rule>
@@ -1290,11 +1218,13 @@
 		<one-of>
 			<item>my</item>
 			<item>your</item>
+			<!--
 			<item>his</item>
 			<item>her</item>
 			<item>its</item>
 			<item>our</item>
 			<item>their</item>
+			//-->
 		</one-of>
 	</rule>
 	
@@ -1302,46 +1232,21 @@
 		<one-of>
 			<item>this</item>
 			<item>that</item>
+			<!--
 			<item>these</item>
 			<item>those</item>
+			//-->
 		</one-of>
 	</rule>
 
 	<rule id="determinerQuantifier">
 		<one-of>
-			<item>all</item>
 			<item>another</item>
 			<item>any</item>
-			<item>both</item>
-			<item>either</item>
-			<item>enough</item>
-			<item>every</item>
-			<item>each</item>
 			<item>few</item>
-			<item>half</item>
-			<item>hardly any</item>
-			<item>large</item>
 			<item>little</item>
+			<item>little bit</item>
 			<item>lot</item>
-			<item>lots</item>
-			<item>majority</item>
-			<item>many</item>
-			<item>much</item>
-			<item>minority</item>
-			<item>more</item>
-			<item>most</item>
-			<item>neither</item>
-			<item>no</item>
-			<item>none</item>
-			<item>not many</item>
-			<item>not much</item>
-			<item>not too many</item>
-			<item>not too much</item>
-			<item>part</item>
-			<item>plenty</item>
-			<item>several</item>
-			<item>small amount</item>
-			<item>small number</item>
 			<item>some</item>
 			<item><ruleref uri="#number"/></item>
 		</one-of>
@@ -1363,7 +1268,6 @@
 
 	<rule id="number">
 		<one-of>
-			<item>zero</item>
 			<item>one</item>
 			<item>two</item>
 			<item>three</item>
@@ -1371,9 +1275,6 @@
 			<item>five</item>
 			<item>six</item>
 			<item>seven</item>
-			<item>eight</item>
-			<item>nine</item>
-			<item>ten</item>
 		</one-of>
 	</rule>
 	
