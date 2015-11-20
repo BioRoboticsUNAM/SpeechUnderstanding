@@ -10,6 +10,7 @@ namespace SpeechUnderstanding
 	{
 		protected SpeechRecognitionEngine engine;
 		protected Grammar grammar;
+		protected Grammar grammarAlt;
 		protected CFRInterpreter interpreter;
 		private static StreamWriter resultsFile;
 		private static object resultsFileLock;
@@ -26,6 +27,8 @@ namespace SpeechUnderstanding
 			LoadGrammar(grammarFilePath);	
 			this.engine = new SpeechRecognitionEngine();
 			this.engine.LoadGrammar(grammar);
+			this.engine.LoadGrammar(grammarAlt);
+			grammarAlt.Enabled = false;
 			this.interpreter = new CFRInterpreter();
 		}
 
@@ -36,10 +39,22 @@ namespace SpeechUnderstanding
 				this.grammar = new Grammar(grammarFilePath);
 
 			}
-			catch
+			catch(Exception ex)
 			{
 				Console.WriteLine("Error while loading grammar. DictationGrammar will be used");
 				this.grammar = new DictationGrammar();
+				ex.ToString();
+			}
+			LoadGrammarAlt(grammarFilePath);
+		}
+
+		protected void LoadGrammarAlt(string grammarFilePath)
+		{
+			try
+			{
+				grammarAlt = new Grammar(grammarFilePath, "sentenceAlt");
+			}
+			catch { grammarAlt = new DictationGrammar();
 			}
 		}
 
@@ -67,6 +82,7 @@ namespace SpeechUnderstanding
 			lock (resultsFileLock)
 			{
 				resultsFile.WriteLine("{0}|{1}|{2}", waveFile, transcript, cfr);
+				resultsFile.Flush();
 			}
 		}
 	}

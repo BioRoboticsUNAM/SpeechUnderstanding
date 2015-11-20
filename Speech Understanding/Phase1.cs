@@ -37,7 +37,7 @@ namespace SpeechUnderstanding
 				Thread worker = new Thread(new ParameterizedThreadStart(WorkerTask));
 				workers.Add(worker);
 				worker.IsBackground = true;
-				worker.Start();
+				worker.Start(grammarFilePath);
 			}
 			for (int i = 0; i < workers.Count; ++i)
 				workers[i].Join();
@@ -66,6 +66,7 @@ namespace SpeechUnderstanding
 					if (pendingWavFiles.Count < 1)
 						return;
 					waveFile = pendingWavFiles.Dequeue();
+					Console.WriteLine("Pending {0} | Processing {1}", pendingWavFiles.Count, waveFile);
 				}
 				p.ProcessWaveFile(waveFile);
 			}
@@ -74,7 +75,16 @@ namespace SpeechUnderstanding
 		private void ProcessWaveFile(string waveFile)
 		{
 			this.engine.SetInputToWaveFile(waveFile);
-			string transcript = this.engine.Recognize().Text;
+			this.grammarAlt.Enabled = false;
+			RecognitionResult result = this.engine.Recognize();
+			if ((result == null) || (result.Confidence < 50))
+			{
+				this.grammarAlt.Enabled = true;
+				this.engine.SetInputToWaveFile(waveFile);
+				result = this.engine.Recognize();
+			}
+			string transcript = (result == null) ? String.Empty : result.Text;
+			transcript = transcript.Replace("... ", String.Empty);
 			string cfr = interpreter.Interpret(transcript);
 			WriteResultsFile(waveFile, transcript, cfr);
 			

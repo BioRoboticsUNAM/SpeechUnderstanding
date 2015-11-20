@@ -1,1 +1,1384 @@
-﻿
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- the default grammar language is US English -->
+<grammar xmlns="http://www.w3.org/2001/06/grammar"
+	tag-format="semantics/1.0"
+	mode="voice"
+	xml:lang="en-GB"
+	version="1.0"
+	root="sentence">
+	
+	<rule id="sentence">
+		<ruleref uri="#polite" />
+		<one-of>
+			<item><ruleref uri="#simpleCommand" /></item>
+			<item><ruleref uri="#complexCommand" /></item>
+			<!--
+			<item>
+				<item weight="0.01" repeat="1-3">
+					<ruleref uri="#stripped" /><item repeat="0-1">and</item>
+				</item>
+			</item>
+			//-->
+		</one-of>
+		<item repeat="0-1">please</item>
+		<!-- <ruleref uri="#garbage" /> //-->
+	</rule>
+	
+	<rule id="sentenceAlt" scope="public">
+		<ruleref uri="#polite" />
+		<item repeat="1-3">
+			<ruleref uri="#stripped" /><item repeat="0-1">and</item>
+		</item>
+		<item repeat="0-1">please</item>
+	</rule>
+	
+	<rule id="complexCommand">
+		<item><ruleref uri="#simpleCommand" /></item>
+		<item repeat="1-3"><ruleref uri="#simpleCommand" /></item>
+		<item>and <ruleref uri="#simpleCommand" /></item>
+	</rule>
+	
+	<rule id="simpleCommand">
+		<one-of>
+			<!-- BRINGING //-->
+			<item><ruleref uri="#commandBring" /></item>
+			<!-- PLACING //-->
+			<item><ruleref uri="#commandPlace" /></item>
+			<!-- TAKING //-->
+			<item><ruleref uri="#commandTake" /></item>
+			
+			<!-- SEARCHING //-->
+			<item><ruleref uri="#commandSearch" /></item>
+			<!-- MOTION //-->
+			<item><ruleref uri="#commandFollow" /></item>
+			<item><ruleref uri="#commandNavigate" /></item>
+			<!-- OTHER //-->
+			<item><ruleref uri="#commandTurnOnOff" /></item>
+			<item><ruleref uri="#commandTurnOnOff" /></item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Object delivery
+		Bring / give / take
+	
+	//-->
+	<rule id="commandBring">
+		<ruleref uri="#verbBring" />
+		<one-of>
+		<!-- bring [to whom] [what] //-->
+			<item><ruleref uri="#bringReceiver" /><ruleref uri="#bringDirectObject" /></item>
+			<!-- bring [to whom] [what] [from where] //-->
+			<item><ruleref uri="#bringReceiver" /><ruleref uri="#bringDirectObject" /><ruleref uri="#bringObjectSource" /></item>
+			<!-- bring [what] [from where] [to where] //-->
+			<item><ruleref uri="#bringDirectObject" /><ruleref uri="#bringObjectSource" /><ruleref uri="#bringDestination" /></item>
+			<!-- bring [what] [to where] //-->
+			<item><ruleref uri="#bringDirectObject" /><ruleref uri="#bringDestination" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="bringReceiver">
+		<one-of>
+			<item>here</item>
+			<item>there</item>
+			<item><ruleref uri="#pronounPersonal2" /></item>
+			<item><ruleref uri="#nounPeople" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="bringDestination">
+		<one-of>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
+			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="bringObjectSource">
+		<item repeat="0-1">that is</item>
+		<ruleref uri="#prepositionPlace" />
+		<ruleref uri="#place" />
+	</rule>
+	
+	<rule id="bringDirectObject">
+		<ruleref uri="#object" />
+		<item repeat="0-2">and <ruleref uri="#object" /></item>
+	</rule>
+	
+	<rule id="verbBring">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>bring</item>
+			<item>deliver</item>
+			<item>give</item>
+			<item>move</item>
+			<item>take</item>
+			<item>get</item>
+		</one-of>
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+	</rule>
+	
+	<!--
+	
+	Object placing
+		Place / give / take
+	
+	//-->
+	<rule id="commandPlace">
+		<ruleref uri="#verbPlace" />
+		<one-of>
+			<!-- place [what] [where] //-->
+			<item><ruleref uri="#placeDirectObject" /><ruleref uri="#placeDestination" /></item>
+			<!-- give [what] [who] //-->
+			<item><ruleref uri="#placeDirectObject" /><ruleref uri="#placeReceiver" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="placeReceiver">
+		<ruleref uri="#prepositionPlace" />
+		<one-of>
+			<item><ruleref uri="#pronounPersonal2" /></item>
+			<item><ruleref uri="#nounPeople" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="placeDestination">
+		<one-of>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
+			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="placeDirectObject">
+		<ruleref uri="#object" />
+		<item repeat="0-2">and <ruleref uri="#object" /></item>
+	</rule>
+	
+	<rule id="verbPlace">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>bring</item>
+			<item>deliver</item>
+			<item>carry</item>
+			<item>hang out</item>
+			<item>give</item>
+			<item>place</item>
+			<item>put</item>
+			<item>put down</item>
+			<item>take</item>
+			<item>release</item>
+		</one-of>
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+	</rule>
+	
+	<!--
+	
+	Object delivery
+		Take / give / grasp
+	
+	//-->
+	<rule id="commandTake">
+		<ruleref uri="#verbTake" />
+		<one-of>
+			<item><ruleref uri="#takeDirectObject" /></item>
+			<!-- take [what] [from who/where] //-->
+			<item><ruleref uri="#takeDirectObject" /><ruleref uri="#takeSource" /></item>
+			<!-- take [from who/where] [what] //-->
+			<item><ruleref uri="#takeSource" /><ruleref uri="#takeDirectObject" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="takeSource">
+		<ruleref uri="#prepositionPlace" />
+		<one-of>
+			<item><ruleref uri="#place" /></item>
+			<item><ruleref uri="#people" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="takeDirectObject">
+		<ruleref uri="#object" />
+		<item repeat="0-2">and <ruleref uri="#object" /></item>
+	</rule>
+	
+	<rule id="verbTake">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>bring</item>
+			<item>take</item>
+			<item>grasp</item>
+			<item>pick up</item>
+		</one-of>
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+	</rule>
+	
+	<!--
+	
+	Object/people search
+		Search / look for / find
+	
+	//-->
+	<rule id="commandSearch">
+		<ruleref uri="#verbSearch" />
+		<one-of>
+			<!-- search [what] //-->
+			<item><ruleref uri="#searchDirectObject" /></item>
+			<!-- search [what] [where] //-->
+			<item><ruleref uri="#searchDirectObject" /><ruleref uri="#searchPlace" /></item>
+			<!-- search [where] for [what] //-->
+			<item><ruleref uri="#searchPlace" /> for <ruleref uri="#searchDirectObject" /></item>
+			<!-- search [what] for [who] //-->
+			<item><ruleref uri="#bringDirectObject" /> for <ruleref uri="#people" /></item>
+			<!-- search [what] [where] for [who] //-->
+			<item><ruleref uri="#searchDirectObject" /><ruleref uri="#searchPlace" /> for <ruleref uri="#people" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="searchPlace">
+		<one-of>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
+			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="searchDirectObject">
+		<one-of>
+			<item><ruleref uri="#phraseNounModifier" /><ruleref uri="#noun" /></item>
+			<item><ruleref uri="#object" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="verbSearch">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>find</item>
+			<item>look</item>
+			<item>search</item>
+		</one-of>
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+	</rule>
+	
+	<!--
+	
+	Follow people
+		follow
+	
+	//-->
+	<rule id="commandFollow">
+		<ruleref uri="#verbFollow" />
+		<one-of>
+			<!-- follow [who] [where] //-->
+			<item><ruleref uri="#followActor" /><item repeat="0-1"><ruleref uri="#adverb" /></item></item>
+			<!-- follow [who] [where] //-->
+			<item><ruleref uri="#followActor" /><ruleref uri="#followDestination" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="followActor">
+		<one-of>
+			<item><ruleref uri="#pronounPersonal2" /></item>
+			<item><ruleref uri="#nounPeople" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="followDestination">
+		<one-of>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>here</item>
+			<item><item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>there</item>
+			<item><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="followOrigin">
+		<ruleref uri="#prepositionPlace" />
+		<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+		<ruleref uri="#nounPlace" />
+	</rule>
+	
+	<rule id="verbFollow">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>follow</item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Navigate
+		go/come/navigate/drive
+	
+	//-->	
+	<rule id="commandNavigate">
+		<ruleref uri="#verbNavigate" />
+		<one-of>
+			<!-- go [where] //-->
+			<item><ruleref uri="#navigatePlace" /><item repeat="0-1"><ruleref uri="#adverb" /></item></item>
+			<!--go with [who] //-->
+			<item><ruleref uri="#navigateActor" /><item repeat="0-1"><ruleref uri="#adverb" /></item></item>
+		</one-of>
+	</rule>
+	
+	<rule id="navigateActor">
+		<item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>
+		<one-of>
+			<item>with <ruleref uri="#nounPeople" /></item>
+			<item><ruleref uri="#people" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="navigatePlace">
+		<item repeat="0-1"><ruleref uri="#prepositionPlace" /></item>
+		<one-of>
+			<item>here</item>
+			<item>there</item>
+			<item><ruleref uri="#place" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="verbNavigate">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>go</item>
+			<item>come</item>
+			<item>move</item>
+			<item>navigate</item>
+			<item>drive</item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Turn on/off machines
+		
+	
+	//-->
+	
+	<rule id="commandTurnOnOff">
+		
+		<one-of>
+			<item><ruleref uri="#verbTurnOnOffS" /><ruleref uri="#turnOnOffDirectObject" /></item>
+			<item><ruleref uri="#verbTurnOnOffC" /> on <ruleref uri="#turnOnOffDirectObject" /></item>
+			<item><ruleref uri="#verbTurnOnOffC" /> off <ruleref uri="#turnOnOffDirectObject" /></item>
+			<item><ruleref uri="#verbTurnOnOffC" /><ruleref uri="#turnOnOffDirectObject" /> on</item>
+			<item><ruleref uri="#verbTurnOnOffC" /><ruleref uri="#turnOnOffDirectObject" /> off</item>
+			<item>shut off<ruleref uri="#turnOnOffDirectObject" /></item>
+			<item>shut<ruleref uri="#turnOnOffDirectObject" /> off</item>
+		</one-of>
+		
+	</rule>
+	
+	<rule id="turnOnOffDirectObject">
+		<ruleref uri="#phraseNounModifier" />
+		<ruleref uri="#nounMachines" />
+		<item repeat="0-1"><ruleref uri="#prepositionPlace" /><ruleref uri="#place" /></item>
+	</rule>
+	
+	<rule id="verbTurnOnOffS">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>start</item>
+			<item>stop</item>
+			<item>connect</item>
+			<item>restart</item>
+			<item>reboot</item>
+			<item>disconnect</item>
+			<item>shutdown</item>
+		</one-of>
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+	</rule>
+	
+	<rule id="verbTurnOnOffC">
+		<item repeat="0-1"><ruleref uri="#adverb" /></item>
+		<one-of>
+			<item>turn</item>
+			<item>switch</item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Command extraction from parts
+	
+	//-->
+	
+	<rule id="stripped">
+		<ruleref uri="#garbage" />
+		<one-of>
+			<item><ruleref uri="#strippedBring" /></item>
+			<item><ruleref uri="#strippedFollow" /></item>
+			<item><ruleref uri="#strippedNavigate" /></item>
+			<item><ruleref uri="#strippedPlace" /></item>
+			<item><ruleref uri="#strippedTake" /></item>
+			<item><ruleref uri="#strippedSearch" /></item>
+		</one-of>
+		<ruleref uri="#garbage" />
+	</rule>
+	
+	<rule id="strippedBring">
+		<one-of>
+			<!-- Bring me object place //-->
+			<item><ruleref uri="#verbBring" /><ruleref uri="#garbage" />me<ruleref uri="#garbage" /><ruleref uri="#nounObject" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+			<!-- Bring object place place //-->
+			<item><ruleref uri="#verbBring" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="strippedFollow">
+		<one-of>
+			<!-- Follow person (pronoun) //-->
+			<item><ruleref uri="#verbFollow" /><ruleref uri="#garbage" /><ruleref uri="#pronounPersonal2" /></item>
+			<!-- Follow person //-->
+			<item><ruleref uri="#verbFollow" /><ruleref uri="#garbage" /><ruleref uri="#people" /></item>
+			<!-- Follow person place //-->
+			<item><ruleref uri="#verbFollow" /><ruleref uri="#garbage" /><ruleref uri="#people" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="strippedNavigate">
+		<one-of>
+			<!-- Go place //-->
+			<item><ruleref uri="#verbNavigate" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="strippedPlace">
+		<one-of>
+			<!-- Put object place //-->
+			<item><ruleref uri="#verbPlace" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+			<!-- object Put place //-->
+			<item><ruleref uri="#nounObject" /><ruleref uri="#garbage" /><ruleref uri="#verbPlace" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+			<!-- place Put object //-->
+			<item><ruleref uri="#nounPlace" /><ruleref uri="#garbage" /><ruleref uri="#verbPlace" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="strippedTake">
+		<one-of>
+			<!-- Take object //-->
+			<item><ruleref uri="#verbTake" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /></item>
+			<!-- Take object place //-->
+			<item><ruleref uri="#verbTake" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="strippedSearch">
+		<one-of>
+			<!-- Find object //-->
+			<item><ruleref uri="#verbSearch" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /></item>
+			<item><ruleref uri="#verbSearch" /><ruleref uri="#garbage" /><ruleref uri="#nounPlaceObject" /></item>
+			<!-- Find place //-->
+			<item><ruleref uri="#verbSearch" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+			<!-- Find people //-->
+			<item><ruleref uri="#verbSearch" /><ruleref uri="#garbage" /><ruleref uri="#people" /></item>
+			<!-- Find object place //-->
+			<item><ruleref uri="#verbSearch" /><ruleref uri="#garbage" /><ruleref uri="#nounObject" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+			<!-- Find people place //-->
+			<item><ruleref uri="#verbSearch" /><ruleref uri="#garbage" /><ruleref uri="#people" /><ruleref uri="#garbage" /><ruleref uri="#nounPlace" /></item>
+			<!-- object Find  //-->
+			<item><ruleref uri="#nounObject" /><ruleref uri="#garbage" /><ruleref uri="#verbSearch" /></item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Polite
+	
+	//-->
+	
+	<rule id="polite">
+		<item repeat="0-1">
+			<item repeat="0-1">robot</item>
+			<one-of>
+				<item><ruleref uri="#politePre" /></item>
+				<item><ruleref uri="#politeIn" /></item>
+			</one-of>
+		</item>
+	</rule>
+	
+	<rule id="politePre">
+		<one-of>
+			<item>please</item>
+			<item>let</item>
+			<item>lets</item>
+			<item>lets go</item>
+			<item>let us</item>
+			<item>can you</item>
+			<item>could you</item>
+		</one-of>
+	</rule>
+	
+	<rule id="politeIn">
+		<one-of>
+			<item>can</item>
+			<item>could</item>
+			<item>would</item>
+		</one-of>
+		<item>you</item>
+		<item repeat="0-1">please</item>
+	</rule>
+	
+	<!--
+	
+	Object:
+		[mod] nounObject nounObject (apposition)
+		[mod] nounObject of nounObject
+		[mod] nounObject prepositionPlace [mod] noun (nounPeople, nounPlace, or nounObject)
+	//-->
+	
+	<rule id="object">
+		<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+		<ruleref uri="#nounObject" />
+		<item repeat="0-1">
+			<one-of>
+				<item><ruleref uri="#nounObject" /></item>
+				<item>of <ruleref uri="#nounObject" /></item>
+				<item>
+					<ruleref uri="#prepositionPlace" />
+					<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+					<ruleref uri="#nounPlace" />
+				</item>
+				<item>
+					<ruleref uri="#prepositionPlace" />
+					<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+					<ruleref uri="#noun" />
+				</item>
+			</one-of>
+		</item>
+	</rule>
+	
+	<!--
+	
+	Place:
+		[mod] nounPlace
+		[mod] nounPlaceObject of [mod] nounPlaceRoom
+		[mod] nounPlace prepositionPlace [mod] noun (nounPeople, nounPlace, or nounObject)
+	//-->
+	<rule id="place">
+		<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+		<one-of>
+			<item><ruleref uri="#nounPlace" /></item>
+			
+			<item>
+				<ruleref uri="#nounPlaceObject" />
+				of 
+				<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+				<ruleref uri="#nounPlaceRoom" />
+			</item>
+			
+			<item>
+				<ruleref uri="#nounPlace" />
+				<ruleref uri="#prepositionPlace" />
+				<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+				<ruleref uri="#noun" />
+			</item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	People:
+		[mod] nounPeople
+		[mod] nounPeople prepositionPlace [mod] noun (nounPeople, nounPlace, or nounObject)
+	//-->
+	<rule id="people">
+		<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+		<ruleref uri="#nounPeople" />
+		<!--
+		<item repeat="0-1">
+			<ruleref uri="#prepositionPlace" />
+			<item repeat="0-1"><ruleref uri="#phraseNounModifier" /></item>
+			<ruleref uri="#noun" />
+		</item>
+		//-->
+	</rule>
+	
+	<!--
+	
+	Noun phrase:
+		A noun phrase has a noun (flight), which usually has a determiner (a) and/or adjective (good) in front of it. A noun phrase can also be a pronoun (we).
+		A prepositional phrase or adverb phrase can come after the noun and modify it.
+	
+	//-->
+	
+	<rule id="phraseNounModifier">
+		<!--
+			Determiners, quantifiers and modifiers come in a fixed order before the noun.
+			All determiners goes before the modifiers and the noun: determiners + modifiers + noun.
+			We can also use a determiner after a quantifier + of (some of my).
+			We can also use an article or demonstrative before a quantifier + of (a couple of the).
+			A prepositional phrase or adverb phrase can come after the noun and modify it.
+		//-->
+		<item repeat="0-1">
+			<one-of>
+				<item><ruleref uri="#determiner" /></item>
+				<item><ruleref uri="#determinerQuantifier" /><ruleref uri="#determinerNQ" /></item>
+				<item><ruleref uri="#determinerQuantifier" /> of <ruleref uri="#determinerNQ" /></item>
+				<item><ruleref uri="#determinerArticle" /><ruleref uri="#determinerQuantifier" /> of <ruleref uri="#determinerNQ" /></item>
+				<item><ruleref uri="#determinerDemonstrative" /><ruleref uri="#determinerQuantifier" /> of <ruleref uri="#determinerNQ" /></item>
+				<item><ruleref uri="#determinerNQ" /><ruleref uri="#determinerQuantifier" /></item>
+			</one-of>
+		</item>
+		<item repeat="0-5"><ruleref uri="#phraseAdjective" /></item>
+	</rule>
+	
+	<!--
+	
+	Adjective phrase:
+		An adjective phrase has an adjective, sometimes with an adverb of degree (very).
+	
+	//-->
+	<rule id="phraseAdjective">
+		<one-of>
+			<item><ruleref uri="#phraseAdjectiveSimple" /></item>
+			<item><ruleref uri="#phraseAdjectiveSimple" /><ruleref uri="#and_or" /><ruleref uri="#phraseAdjectiveSimple" /></item>
+			<item><ruleref uri="#phraseAdjectiveList" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="phraseAdjectiveSimple">
+		<item repeat="0-"><ruleref uri="#adverbDegree" /></item>
+		<item><ruleref uri="#adjective" /></item>
+	</rule>
+	
+	<rule id="phraseAdjectiveList">
+		<item><ruleref uri="#phraseAdjectiveSimple" />,</item>
+		<item repeat="0-"><ruleref uri="#phraseAdjectiveSimple" />,</item>
+		<item><ruleref uri="#and_or" /></item>
+		<item><ruleref uri="#phraseAdjectiveSimple" /></item>
+	</rule>
+	
+	<!--
+	
+	Adverb phrase:
+		An adverb phrase has an adverb, sometimes with an adverb of degree (almost).
+	
+	//-->
+	<rule id="phraseAdverb">
+		<one-of>
+			<item><ruleref uri="#phraseAdverbSimple" /></item>
+			<item><ruleref uri="#phraseAdverbSimple" /><ruleref uri="#and_or" /><ruleref uri="#phraseAdverbSimple" /></item>
+			<item><ruleref uri="#phraseAdverbList" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="phraseAdverbSimple">
+		<item repeat="0-5"><ruleref uri="#adverbDegree" /></item>
+		<item><ruleref uri="#adverbNoDegree" /></item>
+	</rule>
+	
+	<rule id="phraseAdverbList">
+		<item><ruleref uri="#phraseAdverbSimple" />,</item>
+		<item repeat="0-5"><ruleref uri="#phraseAdverbSimple" />,</item>
+		<item><ruleref uri="#and_or" /></item>
+		<item><ruleref uri="#phraseAdverbSimple" /></item>
+	</rule>
+			
+	<!--
+	
+	Pronouns:
+		Pronouns can be:
+			Personal:		I (me), you, he (him), her (she), iy, we (us), and they (them)
+			Reflexive:		myself, yourself, himself, herself, itself, ourselves, yourselves, themselves
+			Possessive:		my, your, his, her, its, our, their
+			Demonstrative:	this, that, these, those
+	
+	//-->
+	
+	<rule id="pronounPersonal2">
+		<one-of>
+			<item>me</item>
+			<item>her</item>
+			<item>her</item>
+			<item>us</item>
+			<item>them</item>
+		</one-of>
+	</rule>
+	
+	<rule id="pronounDemonstrative">
+		<one-of>
+			<item>this</item>
+			<item>that</item>
+			<item>these</item>
+			<item>those</item>
+		</one-of>
+	</rule>
+	
+	<rule id="pronounRelative">
+		<one-of>
+			<item>who</item>
+			<item>whom</item>
+			<item>which</item>
+			<item>that</item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Preposition:
+		A preposition is a word like in, to, for, out of
+		Propositions can be of:
+			Place:		in, under, across
+			Time:		at, before, for	
+	//-->
+	<rule id="prepositionPlace">
+		<one-of>
+			<item>above</item>
+			<item>across</item>
+			<item>against</item>
+			<item>along</item>
+			<item>among</item>
+			<item>around</item>
+			<item>at</item>
+			<item>away from</item>
+			<item>behind</item>
+			<item>below</item>
+			<item>beside</item>
+			<item>between</item>
+			<item>beyond</item>
+			<item>by</item>
+			<item>close to</item>
+			<item>down</item>
+			<item>from</item>
+			<item>in</item>
+			<item>in front of</item>
+			<item>inside</item>
+			<item>into</item>
+			<item>near</item>
+			<item>next to</item>
+			<item>off</item>
+			<item>on</item>
+			<item>on top of</item>
+			<item>onto</item>
+			<item>opposite</item>
+			<item>out of</item>
+			<item>outside</item>
+			<item>past</item>
+			<item>round</item>
+			<item>through</item>
+			<item>to</item>
+			<item>towards</item>
+			<item>under</item>
+			<item>underneath</item>
+			<item>up</item>
+		</one-of>
+	</rule>
+	
+	
+	<!--
+	
+	Adverbs:
+		Adverbs can be:
+			Degree:		May modify also adjectives and prepositions
+			Frequency:	how often?
+			Manner:		An adverb of manner modifies a verb. Most adverbs of manner are formed from an adjective + ly
+	
+	//-->
+
+	<rule id="adverb">
+		<one-of>
+			<item><ruleref uri="#adverbDegree" /></item>
+			<item><ruleref uri="#adverbFrequency" /></item>
+			<item><ruleref uri="#adverbManner" /></item>
+			<item><ruleref uri="#adverbPlace" /></item>
+			<item><ruleref uri="#adverbTruth" /></item>
+		</one-of>
+	</rule>
+
+	<rule id="adverbNoDegree">
+		<one-of>
+			<item><ruleref uri="#adverbFrequency" /></item>
+			<item><ruleref uri="#adverbManner" /></item>
+			<item><ruleref uri="#adverbPlace" /></item>
+			<item><ruleref uri="#adverbTruth" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="adverbFrequency">
+		<one-of>
+			<item></item>
+		</one-of>
+	</rule>
+
+	<rule id="adverbManner">
+		<one-of>
+			<item>quickly</item>
+			<item>really</item>
+			<item>slowly</item>
+			<item>carefully</item>
+			<item>closely</item>
+			<item>fast</item>
+			<item>straight</item>
+		</one-of>
+	</rule>
+
+	<rule id="adverbPlace">
+		<one-of>
+			<item>above</item>
+			<item>away</item>
+			<item>behind</item>
+			<item>below</item>
+			<item>down</item>
+			<item>elsewhere</item>
+			<item>everywhere</item>
+			<item>here</item>
+			<item>inside</item>
+			<item>near</item>
+			<item>nearby</item>
+			<item>off</item>
+			<item>on</item>
+			<item>out</item>
+			<item>outside</item>
+			<item>over</item>
+			<item>there</item>
+			<item>there</item>
+			<item>towards</item>
+			<item>under</item>
+			<item>up</item>
+			<item>where</item>
+		</one-of>
+	</rule>
+	
+	<rule id="adverbTruth">
+		<one-of>
+			<item>maybe</item>
+		</one-of>
+	</rule>
+	
+	<rule id="adverbDegree">
+		<one-of>
+			<item>a bit</item>
+			<item>a little</item>
+			<item>absolutely</item>
+			<item>as</item>
+			<item>at all</item>
+			<item>awfully</item>
+			<item>completely</item>
+			<item>entirely</item>
+			<item>extremely</item>
+			<item>fairly</item>
+			<item>fully</item>
+			<item>half</item>
+			<item>hardly</item>
+			<item>least</item>
+			<item>less</item>
+			<item>more</item>
+			<item>most</item>
+			<item>pretty</item>
+			<item>quite</item>
+			<item>rather</item>
+			<item>really</item>
+			<item>scarcely</item>
+			<item>slightly</item>
+			<item>so</item>
+			<item>somewhat</item>
+			<item>terribly</item>
+			<item>too</item>
+			<item>totally</item>
+			<item>very</item>
+		</one-of>
+	</rule>
+		
+	<!--
+
+	Nouns:
+		singular nouns
+		plural nouns
+		name list
+//-->
+	
+	<rule id="noun">
+		<one-of>
+			<item><ruleref uri="#nounName" /></item>
+			<item><ruleref uri="#nounObject" /></item>
+			<item><ruleref uri="#nounPlace" /></item>
+			<item><ruleref uri="#nounPeople" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounName">
+		<one-of>
+			<item>john</item>
+			<item>michael</item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounPeople">
+		<one-of>
+			<item><ruleref uri="#determinerPossesive" /><ruleref uri="#nounFamily" /></item>
+			<item>
+				<one-of><item>this</item><item>that</item><item>the</item></one-of>
+				<one-of>
+					<item>guest</item>
+					<item>guy</item>
+					<item>man</item>
+					<item>person</item>
+					<item>people</item>
+					<item>postman</item>
+				</one-of>
+			</item>
+			<item><ruleref uri="#nounName" /></item>
+			<item><ruleref uri="#nounName" />'s <ruleref uri="#nounFamily" /></item>
+			<item>the <ruleref uri="#nounFamily" /> of <ruleref uri="#nounName" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounFamily">
+		<one-of>
+			<item>father</item>
+			<item>mother</item>
+			<item>sister</item>
+			<item>brother</item>
+			<item>friend</item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounObject">
+		<one-of>
+			<item>abat jour</item>
+			<item>apple</item>
+			<item>aspirin</item>
+			<item>bag</item>
+			<item>beer</item>
+			<item>book</item>
+			<item>bottle</item>
+			<item>box</item>
+			<item>bread</item>
+			<item>cake</item>
+			<item>can</item>
+			<item>catalogue</item>
+			<item>cell phone</item>
+			<item>cellphone</item>
+			<item>cereal</item>
+			<item>chair</item>
+			<item>cloth</item>
+			<item>coat</item>
+			<item>coffee</item>
+			<item>coke</item>
+			<item>remote control</item>
+			<item>cookie</item>
+			<item>corn</item>
+			<item>corridor</item>
+			<item>cup</item>
+			<item>cupboard</item>
+			<item>cutlery</item>
+			<item>cutting board</item>
+			<item>detergent</item>
+			<item>drink</item>
+			<item>envelope</item>
+			<item>eyeglass</item>
+			<item>folder</item>
+			<item>fork</item>
+			<item>fruit</item>
+			<item>garbage</item>
+			<item>glass</item>
+			<item>hat</item>
+			<item>hoodie</item>
+			<item>hook</item>
+			<item>jacket</item>
+			<item>jacket hook</item>
+			<item>jam</item>
+			<item>jar</item>
+			<item>juice</item>
+			<item>knife</item>
+			<item>kettle</item>
+			<item>lamp</item>
+			<item>laptop</item>
+			<item>loo roll</item>
+			<item>magazine</item>
+			<item>mayo</item>
+			<item>milk</item>
+			<item>mirror</item>
+			<item>mug</item>
+			<item>mustard</item>
+			<item>newspaper</item>
+			<item>orange</item>
+			<item>pack</item>
+			<item>pan</item>
+			<item>plant</item>
+			<item>poster</item>
+			<item>toilet paper</item>
+			<item>paperback</item>
+			<item>pasta</item>
+			<item>pen</item>
+			<item>phone</item>
+			<item>pile</item>
+			<item>pillow</item>
+			<item>plate</item>
+			<item>postcard</item>
+			<item>pot</item>
+			<item>radio</item>
+			<item>rag</item>
+			<item>remote control</item>
+			<item>room</item>
+			<item>salt</item>
+			<item>seat</item>
+			<item>shampoo</item>
+			<item>soap</item>
+			<item>tablecloth</item>
+			<item>tablet</item>
+			<item>telephone</item>
+			<item>tissue</item>
+			<item>towel</item>
+			<item>towels</item>
+			<item>trash</item>
+			<item>trash bin</item>
+			<item>tray</item>
+			<item>t-shirt</item>
+			<item>vase</item>
+			<item>wallet</item>
+			<item>watch</item>
+			<item>water</item>
+			<item>wine</item>
+			<item>wristwatch</item>
+			<item>yogurt</item>
+			
+			<item>bags</item>
+			<item>beers</item>
+			<item>blinds</item>
+			<item>cans</item>
+			<item>cereals</item>
+			<item>chairs</item>
+			<item>cigarettes</item>
+			<item>clops</item>
+			<item>clothes</item>
+			<item>cornflakes</item>
+			<item>couches</item>
+			<item>cups</item>
+			<item>curtains</item>
+			<item>drawers</item>
+			<item>fences</item>
+			<item>flowers</item>
+			<item>forks</item>
+			<item>glasses</item>
+			<item>keys</item>
+			<item>lamps</item>
+			<item>lights</item>
+			<item>messages</item>
+			<item>mugs</item>
+			<item>napkins</item>
+			<item>pants</item>
+			<item>pictures</item>
+			<item>pillows</item>
+			<item>plates</item>
+			<item>scissors</item>
+			<item>shoes</item>
+			<item>shutters</item>
+			<item>sinks</item>
+			<item>slippers</item>
+			<item>stands</item>
+			<item>sunglasses</item>
+			<item>tables</item>
+			<item>taps</item>
+			<item>thanks</item>
+			<item>trousers</item>
+			<item>utensils</item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounPlace">
+		<one-of>
+			<item><ruleref uri="#nounPlaceObject" /></item>
+			<item><ruleref uri="#nounPlaceRoom" /></item>
+			<item><ruleref uri="#nounPlaceRoom" /><ruleref uri="#nounPlaceObject" /></item>
+			<item>left</item>
+			<item>right</item>
+			<item>left hand side</item>
+			<item>right hand side</item>
+			<item>head</item>
+			<item>beginning</item>
+			<item>end</item>
+			<item>here</item>
+			<item>there</item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounPlaceRoom">
+		<one-of>
+			<item>bathroom</item>
+			<item>bedroom</item>
+			<item>center room</item>
+			<item>control room</item>
+			<item>dining room</item>
+			<item>diningroom</item>
+			<item>dinner</item>
+			<item>garden</item>
+			<item>hall</item>
+			<item>house</item>
+			<item>kitchen</item>
+			<item>laundry</item>
+			<item>living room</item>
+			<item>livingroom</item>
+			<item>lounge</item>
+			<item>reading room</item>
+			<item>storage</item>
+			<item>storage room</item>
+			<item>shower</item>
+			<item>studio</item>
+			<item>wall</item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounPlaceObject">
+		<one-of>
+			<item>bathtub</item>
+			<item>bed</item>
+			<item>bedside</item>
+			<item>bedstand</item>
+			<item>bed stand</item>
+			<item>bench</item>
+			<item>bin</item>
+			<item>bookshelf</item>
+			<item>cabinet</item>
+			<item>chair</item>
+			<item>closet</item>
+			<item>cloth horse</item>
+			<item>coffee table</item>
+			<item>corner</item>
+			<item>couch</item>
+			<item>counter</item>
+			<item>cushion</item>
+			<item>cutting board</item>
+			<item>desk</item>
+			<item>desktop</item>
+			<item>dish washer</item>
+			<item>dishwasher</item>
+			<item>door</item>
+			<item>drawer</item>
+			<item>dresser</item>
+			<item>fridge</item>
+			<item>lamp</item>
+			<item>mirror</item>
+			<item>night stand</item>
+			<item>nightstand</item>
+			<item>oven</item>
+			<item>pantry</item>
+			<item>plant</item>
+			<item>poster</item>
+			<item>press</item>
+			<item>refrigerator</item>
+			<item>sink</item>
+			<item>sofa</item>
+			<item>stereo</item>
+			<item>stove</item>
+			<item>table</item>
+			<item>toilet</item>
+			<item>television</item>
+			<item>tv</item>
+			<item>wardrobe</item>
+			<item>washing line</item>
+			<item>washing machine</item>
+			<item>window</item>
+			<item><ruleref uri="#nounMachines" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="nounMachines">
+		<one-of>
+			<item>answer machine</item>
+			<item>boiler</item>
+			<item>coffee machine</item>
+			<item>computer</item>
+			<item>dishwasher</item>
+			<item>heating</item>
+			<item>kettle</item>
+			<item>lamp</item>
+			<item>light</item>
+			<item>pc</item>
+			<item>tv</item>
+			<item>television</item>
+			<item>thermostat</item>
+			<item>wifi</item>
+			<item>tap</item>
+			<item>taps in the shower</item>
+			<item>radio</item>
+			<item>router</item>
+			<item>stereo</item>
+			<item>shower taps</item>
+			<item>stove</item>
+			<item>washing machine</item>
+		</one-of>
+	</rule>
+	
+	<rule id="adjective">
+		<one-of>
+			<item>architecture</item>
+			<item>abat</item>
+			<item>big</item>
+			<item>black</item>
+			<item>blonde</item>
+			<item>blue</item>
+			<item>bright</item>
+			<item>brown</item>
+			<item>butcher</item>
+			<item>center</item>
+			<item>clean</item>
+			<item>cold</item>
+			<item>double</item>
+			<item>electric</item>
+			<item>empty</item>
+			<item>far</item>
+			<item>few</item>
+			<item>glass</item>
+			<item>gray</item>
+			<item>horn</item>
+			<item>hungry</item>
+			<item>key</item>
+			<item>left</item>
+			<item>light</item>
+			<item>little</item>
+			<item>main</item>
+			<item>mobile</item>
+			<item>nearest</item>
+			<item>next</item>
+			<item>orange</item>
+			<item>plastic</item>
+			<item>ready</item>
+			<item>red</item>
+			<item>remote</item>
+			<item>right</item>
+			<item>same</item>
+			<item>skinny</item>
+			<item>tired</item>
+			<item>white</item>
+			<item>wide</item>
+			<item>yellow</item>
+
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Determiners:
+		Determines can be:
+			Article:		a, an, the
+			Possessive:		my, your, his, her, its, our, their
+			Demonstrative:	this, that
+			Quantifier:		some, many, a lot of, both, all, enough.
+	
+	//-->
+
+	<rule id="determiner">
+		<one-of>
+			<item><ruleref uri="#determinerArticle" /></item>
+			<item><ruleref uri="#determinerPossesive" /></item>
+			<item><ruleref uri="#determinerDemonstrative" /></item>
+			<item><ruleref uri="#determinerQuantifier" /></item>
+		</one-of>
+	</rule>
+
+	<rule id="determinerNQ">
+		<one-of>
+			<item><ruleref uri="#determinerArticle" /></item>
+			<item><ruleref uri="#determinerPossesive" /></item>
+			<item><ruleref uri="#determinerDemonstrative" /></item>
+		</one-of>
+	</rule>
+	
+	<rule id="determinerArticle">
+		<one-of>
+			<item>a</item>
+			<item>an</item>
+			<item>the</item>
+		</one-of>
+	</rule>
+	
+	<rule id="determinerPossesive">
+		<one-of>
+			<item>my</item>
+			<item>your</item>
+			<item>his</item>
+			<item>her</item>
+			<item>its</item>
+			<item>our</item>
+			<item>their</item>
+		</one-of>
+	</rule>
+	
+	<rule id="determinerDemonstrative">
+		<one-of>
+			<item>this</item>
+			<item>that</item>
+			<item>these</item>
+			<item>those</item>
+		</one-of>
+	</rule>
+
+	<rule id="determinerQuantifier">
+		<one-of>
+			<item>all</item>
+			<item>another</item>
+			<item>any</item>
+			<item>both</item>
+			<item>either</item>
+			<item>enough</item>
+			<item>every</item>
+			<item>each</item>
+			<item>few</item>
+			<item>half</item>
+			<item>hardly any</item>
+			<item>large</item>
+			<item>little</item>
+			<item>lot</item>
+			<item>lots</item>
+			<item>majority</item>
+			<item>many</item>
+			<item>much</item>
+			<item>minority</item>
+			<item>more</item>
+			<item>most</item>
+			<item>neither</item>
+			<item>no</item>
+			<item>none</item>
+			<item>not many</item>
+			<item>not much</item>
+			<item>not too many</item>
+			<item>not too much</item>
+			<item>part</item>
+			<item>plenty</item>
+			<item>several</item>
+			<item>small amount</item>
+			<item>small number</item>
+			<item>some</item>
+			<item><ruleref uri="#number"/></item>
+		</one-of>
+		<item repeat="0-1">of</item>
+	</rule>
+	
+	<rule id="and_or">
+		<one-of>
+			<item>and</item>
+			<item>or</item>
+		</one-of>
+	</rule>
+	
+	<!--
+	
+	Numbers
+	
+	//-->
+
+	<rule id="number">
+		<one-of>
+			<item>zero</item>
+			<item>one</item>
+			<item>two</item>
+			<item>three</item>
+			<item>four</item>
+			<item>five</item>
+			<item>six</item>
+			<item>seven</item>
+			<item>eight</item>
+			<item>nine</item>
+			<item>ten</item>
+		</one-of>
+	</rule>
+	
+	<rule id="garbage">
+		<item repeat="0-1"><ruleref special="GARBAGE" /></item>
+	</rule>
+	
+</grammar>
